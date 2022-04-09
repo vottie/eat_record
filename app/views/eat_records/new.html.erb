@@ -1,0 +1,49 @@
+<h1>New Eat Record</h1>
+
+<%= form_with model: @eat_record do |form| %>
+  <div>
+    <%= form.label :shop_name %><br>
+    <%= form.text_field :shop_name %>
+  </div>
+
+  <div>
+    <%= form.label :place_name %><br>
+    <%= form.text_field :place_name %>
+  </div>
+
+  <div>
+    <%= form.label :use_case %><br>
+    <%= form.text_field :use_case %>
+  </div>
+
+  <div>
+    <%= form.label :eat_with %><br>
+    <%= form.text_field :eat_with %>
+  </div>
+
+  <div>
+    <%= form.label :eat_date %><br>
+    <%= form.date_select :eat_date %>
+  </div>
+
+  <div>
+    <%= form.label :eat_time %><br>
+    <%= form.text_field :eat_time %>
+  </div>
+
+  <div>
+    <%= form.label :eat_menu %><br>
+    <%= form.text_field :eat_menu %>
+  </div>
+
+  <div>
+    <%= form.label :article %><br>
+    <%= form.text_field :article %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
+
+<%= link_to "戻る", "/eat_records" %>

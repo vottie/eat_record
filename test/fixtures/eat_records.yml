@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  shop_name: MyString
+  place_name: MyString
+  usecase: MyString
+  eat_with: MyString
+  eat_date: 2022-04-07
+  eat_time: MyString
+  eat_menu: MyString
+  eat_times: 1
+
+two:
+  shop_name: MyString
+  place_name: MyString
+  usecase: MyString
+  eat_with: MyString
+  eat_date: 2022-04-07
+  eat_time: MyString
+  eat_menu: MyString
+  eat_times: 1
