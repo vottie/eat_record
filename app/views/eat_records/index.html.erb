@@ -1,0 +1,13 @@
+<h1>食べた記録</h1>
+
+<ul>
+  <% @eat_records.each do |eat_record| %>
+    <li>
+      <%= link_to eat_record.shop_name, eat_record %>
+      <%= eat_record.eat_date %>
+    </li>
+  <% end %>
+</ul>
+
+<%= link_to "新たに登録", "eat_records/new" %>
+
