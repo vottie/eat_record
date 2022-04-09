@@ -6,6 +6,8 @@ Rails.application.routes.draw do
   # root "articles#index"
   root "eat_records#index"
 
+  resources :users
+
   resources :eat_records
   #get "eat_records", to: "eat_records#index"
   #get "eat_records/:id", to: "eat_records#show"
