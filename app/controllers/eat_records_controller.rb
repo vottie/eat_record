@@ -1,6 +1,9 @@
 class EatRecordsController < ApplicationController
+  before_action :authenticate_user!
+
   def index
-    @eat_records = EatRecord.all
+    @user = current_user.id
+    @eat_records = EatRecord.where(user_id: @user)
   end
 
   def show
@@ -13,7 +16,8 @@ class EatRecordsController < ApplicationController
 
   def create
     @eat_record = EatRecord.new(eat_record_params)
-
+    @user = current_user.id
+    @eat_record.user_id = @user
     if @eat_record.save
       redirect_to @eat_record
     else
