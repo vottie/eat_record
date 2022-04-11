@@ -2,42 +2,55 @@
 
 <%= form_with model: @eat_record do |form| %>
   <div>
-    <%= form.label :shop_name %><br>
+    <%= form.label :shop_name, "お店の名前" %><br>
     <%= form.text_field :shop_name %>
   </div>
 
   <div>
-    <%= form.label :place_name %><br>
+    <%= form.label :place_name, "お店の場所" %><br>
     <%= form.text_field :place_name %>
   </div>
 
   <div>
-    <%= form.label :use_case %><br>
-    <%= form.text_field :use_case %>
+    <%= form.label :use_case, "利用形態" %><br>
+    <%= form.radio_button :use_case, :shop %>
+    <%= form.label :use_case, "店内" %>
+    <%= form.radio_button :use_case, :take_out %>
+    <%= form.label :use_case, "テークアウト" %>
   </div>
 
   <div>
-    <%= form.label :eat_with %><br>
-    <%= form.text_field :eat_with %>
+    <%= form.label :eat_with, "誰と？" %><br>
+    <%= form.radio_button :eat_with, :self %>
+    <%= form.label :eat_with, "一人" %>
+    <%= form.radio_button :eat_with, :friends %>
+    <%= form.label :eat_with, "友達" %>
+    <%= form.radio_button :eat_with, :family %>
+    <%= form.label :eat_with, "家族" %>
   </div>
 
   <div>
-    <%= form.label :eat_date %><br>
+    <%= form.label :eat_date, "食べた日" %><br>
     <%= form.date_select :eat_date %>
   </div>
 
   <div>
-    <%= form.label :eat_time %><br>
-    <%= form.text_field :eat_time %>
+    <%= form.label :eat_time, "時間帯" %><br>
+    <%= form.radio_button :eat_time, :morning %>
+    <%= form.label :eat_time, "朝" %>
+    <%= form.radio_button :eat_time, :lunch %>
+    <%= form.label :eat_time, "昼" %>
+    <%= form.radio_button :eat_time, :dinner %>
+    <%= form.label :eat_time, "夜" %>
   </div>
 
   <div>
-    <%= form.label :eat_menu %><br>
+    <%= form.label :eat_menu, "何食べた？" %><br>
     <%= form.text_field :eat_menu %>
   </div>
 
   <div>
-    <%= form.label :article %><br>
+    <%= form.label :article, "メモ" %><br>
     <%= form.text_field :article %>
   </div>
 

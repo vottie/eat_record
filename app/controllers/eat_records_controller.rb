@@ -3,7 +3,7 @@ class EatRecordsController < ApplicationController
 
   def index
     @user = current_user.id
-    @eat_records = EatRecord.where(user_id: @user)
+    @eat_records = EatRecord.where(user_id: @user).order(eat_date: "DESC")
   end
 
   def show
