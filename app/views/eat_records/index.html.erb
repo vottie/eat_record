@@ -5,8 +5,8 @@
 <ul>
   <% @eat_records.each do |eat_record| %>
     <li>
-      <%= link_to eat_record.shop_name, eat_record %>
-      <%= eat_record.eat_date %>
+      <span class="eatrec-row1"><%= link_to eat_record.shop_name, eat_record %></span>
+      <span class="eatrec-row2"><%= eat_record.eat_date %></span>
     </li>
   <% end %>
 </ul>
