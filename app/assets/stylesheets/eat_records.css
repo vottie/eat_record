@@ -1,0 +1,12 @@
+ul {
+    list-style:none;
+}
+
+span.eatrec-row1 {
+    float:left;
+}
+
+span.eatrec-row2 {
+    display: block;
+    margin-left: 180px;
+}
