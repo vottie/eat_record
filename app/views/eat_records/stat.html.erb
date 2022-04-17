@@ -1,0 +1,20 @@
+<h1>食べた記録(Statistics)</h1>
+
+<p>ユーザ名: <%= current_user.email %></p>
+
+<ul>
+  <% @eat_records.each do |eat_record| %>
+    <li>
+      <span class="eatrec-row1"><%= link_to eat_record.shop_name, eat_record %></span>
+      <span class="eatrec-row2"><%= eat_record.eat_date %></span>
+    </li>
+  <% end %>
+</ul>
+
+<%= link_to "新たに登録", "eat_records/new" %><br>
+<% if user_signed_in? %>
+  <%= link_to 'ログアウト', destroy_user_session_path, method: :delete %>
+  <% else %>
+    <%= link_to 'ログイン', new_user_session_path %>
+<% end %>
+
