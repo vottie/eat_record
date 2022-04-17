@@ -49,6 +49,36 @@ class EatRecordsController < ApplicationController
   def stat
     @user = current_user.id
     @eat_records = EatRecord.where(user_id: @user).order(eat_date: "DESC")
+    # @eat_records = EatRecord.select(:id, :shop_name).distinct.where(user_id: @user).order(eat_date: "DESC")
+    #@eat_records = EatRecord.select(:shop_name).distinct.where(user_id: @user).order(eat_date: "DESC")
+    
+    @stats = Array.new
+    @eat_records.each do |record|
+      logger.debug(record.inspect)
+      if @stats.size == 0 then
+        stat = EatStat.new
+        stat.name = record.shop_name
+        stat.count = 1
+        @stats.push(stat)
+      else
+        @stats.each do |s|
+          if record.shop_name == s.name then
+            logger.debug("#{s.name} count up")
+            s.count = s.count + 1
+            break
+          else
+            logger.debug("#{record.shop_name} create")
+            stat = EatStat.new
+            stat.name = record.shop_name
+            stat.count = 1
+            @stats.push(stat)
+            break
+          end
+        end
+      end
+    end
+    
+    logger.debug(@stats.inspect)
   end
 
   private

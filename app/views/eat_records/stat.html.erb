@@ -3,15 +3,15 @@
 <p>ユーザ名: <%= current_user.email %></p>
 
 <ul>
-  <% @eat_records.each do |eat_record| %>
+  <% @stats.each do |stat| %>
     <li>
-      <span class="eatrec-row1"><%= link_to eat_record.shop_name, eat_record %></span>
-      <span class="eatrec-row2"><%= eat_record.eat_date %></span>
+      <span class="eatrec-row1"><%= stat.name %></span>
+      <span class="eatrec-row2"><%= stat.count %></span>
     </li>
   <% end %>
 </ul>
 
-<%= link_to "新たに登録", "eat_records/new" %><br>
+<%= link_to "戻る", root_path %><br>
 <% if user_signed_in? %>
   <%= link_to 'ログアウト', destroy_user_session_path, method: :delete %>
   <% else %>
