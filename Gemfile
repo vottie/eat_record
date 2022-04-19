@@ -44,6 +44,10 @@ gem "bootsnap", require: false
 
 gem 'devise'
 
+gem 'mysql2'
+
+gem 'dotenv-rails'
+
 # Use Sass to process CSS
 # gem "sassc-rails"
 
@@ -72,3 +76,5 @@ group :test do
   gem "selenium-webdriver"
   gem "webdrivers"
 end
+
+
