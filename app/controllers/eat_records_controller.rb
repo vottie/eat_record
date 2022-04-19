@@ -1,5 +1,6 @@
 class EatRecordsController < ApplicationController
   before_action :authenticate_user!
+  protect_from_forgery
 
   def index
     @user = current_user.id
