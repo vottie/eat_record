@@ -1,13 +1,12 @@
 Rails.application.routes.draw do
+  get 'top/index'
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-  devise_for :users, controllers: {
-    registrations: "users/registrations"
-  }
 
   # Defines the root path route ("/")
   # root "articles#index"
   root "eat_records#index"
-
+  #root to: 'top#index'
+  
   resources :eat_records do
     collection do
       get 'stat'
@@ -15,4 +14,10 @@ Rails.application.routes.draw do
     #get "eat_records", to: "eat_records#index"
     #get "eat_records/:id", to: "eat_records#show"
   end
+
+  devise_for :users, controllers: {
+    sessions: "users/sessions",
+    registrations: "users/registrations",
+    omniauth_callbacks: 'users/omniauth_callbacks'
+  }
 end
