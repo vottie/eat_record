@@ -1,6 +1,6 @@
 <h1>食べた記録(Statistics)</h1>
 
-<p>ユーザ名: <%= current_user.email %></p>
+<p>ユーザ名: <%= link_to current_user.email, edit_user_registration_path %></p>
 
 <ul>
   <% @stats.each do |stat| %>

@@ -1,5 +1,7 @@
 <h1>New Eat Record</h1>
 
+<p>ユーザ名: <%= link_to current_user.email, edit_user_registration_path %></p>
+
 <%= form_with model: @eat_record do |form| %>
   <div>
     <%= form.label :shop_name, "お店の名前" %><br>
