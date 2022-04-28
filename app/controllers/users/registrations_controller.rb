@@ -18,14 +18,18 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   # GET /resource/edit
-  # def edit
-  #   super
-  # end
+  def edit
+    super
+    logger.debug("RegistrationsController.edit()")
+  end
 
   # PUT /resource
-  # def update
-  #   super
-  # end
+  def update
+    logger.debug("RegistrationsController.update()")
+    super
+    logger.debug(current_user.inspect)
+    current_user.update(user_record_params)
+  end
 
   # DELETE /resource
   def destroy
@@ -63,4 +67,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # def after_inactive_sign_up_path_for(resource)
   #   super(resource)
   # end
+  private
+    def user_record_params
+      params.require(:user).permit(:email, :encrypted_password, :reset_password_token, :reset_password_sent_at, :remember_created_at, :created_at, :update_at, :provider, :uid, :username)
+    end
 end

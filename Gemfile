@@ -52,6 +52,8 @@ gem 'omniauth-google-oauth2'
 
 gem 'omniauth-rails_csrf_protection'
 
+gem 'rails-i18n'
+
 # Use Sass to process CSS
 # gem "sassc-rails"
 
