@@ -9,8 +9,7 @@ set :repo_url, "https://github.com/vottie/eat_record.git"
 set :branch, ENV['BRANCH'] || "develop"
 
 # Default deploy_to directory is /var/www/my_app_name
-# set :deploy_to, "/var/www/html/eat_records"
-set :deploy_to, "/tmp/eat_records"
+set :deploy_to, "/var/www/html/rails/eat_records"
 
 # Default value for :format is :airbrussh.
 # set :format, :airbrussh
@@ -28,10 +27,11 @@ set :rbenv_ruby, File.read('.ruby-version').strip
 
 
 # Default value for :linked_files is []
-# append :linked_files, "config/database.yml", 'config/master.key'
+append :linked_files, "config/master.key","config/credentials/production.key"
 
 # Default value for linked_dirs is []
-append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "tmp/webpacker", "public/system", "vendor", "storage"
+#append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "tmp/webpacker", "public/system", "vendor", "storage"
+append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "storage"
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
