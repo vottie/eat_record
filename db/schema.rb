@@ -11,7 +11,7 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.0].define(version: 2022_04_28_185131) do
-  create_table "eat_records", force: :cascade do |t|
+  create_table "eat_records", charset: "utf8mb3", force: :cascade do |t|
     t.string "shop_name"
     t.string "place_name"
     t.string "usecase"
@@ -21,12 +21,12 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_28_185131) do
     t.string "eat_menu"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "user_id"
+    t.bigint "user_id"
     t.string "article"
     t.index ["user_id"], name: "index_eat_records_on_user_id"
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "users", charset: "utf8mb3", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
