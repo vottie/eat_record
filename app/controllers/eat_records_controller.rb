@@ -54,6 +54,7 @@ class EatRecordsController < ApplicationController
     #@eat_records = EatRecord.select(:shop_name).distinct.where(user_id: @user).order(eat_date: "DESC")
     
     @stats = Array.new
+    skip = false
     @eat_records.each do |record|
       logger.debug(record.inspect)
       if @stats.size == 0 then
@@ -66,15 +67,17 @@ class EatRecordsController < ApplicationController
           if record.shop_name == s.name then
             logger.debug("#{s.name} count up")
             s.count = s.count + 1
-            break
-          else
-            logger.debug("#{record.shop_name} create")
-            stat = EatStat.new
-            stat.name = record.shop_name
-            stat.count = 1
-            @stats.push(stat)
+            skip = true
             break
           end
+        end # end of stats loop
+        # not found
+        if skip == false then
+          logger.debug("#{record.shop_name} create")
+          stat = EatStat.new
+          stat.name = record.shop_name
+          stat.count = 1
+          @stats.push(stat)
         end
       end
     end
