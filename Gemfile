@@ -56,6 +56,8 @@ gem 'rails-i18n'
 
 gem 'debug'
 
+gem 'cssbundling-rails'
+
 # Use Sass to process CSS
 # gem "sassc-rails"
 
