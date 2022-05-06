@@ -58,6 +58,8 @@ gem 'debug'
 
 gem 'cssbundling-rails'
 
+gem 'sd_notify'
+
 # Use Sass to process CSS
 # gem "sassc-rails"
 
