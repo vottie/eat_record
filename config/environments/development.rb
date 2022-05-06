@@ -48,8 +48,8 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :smtp
 
   config.action_mailer.smtp_settings = {
-    address: 'smtp.gmail.com',
-    domain: 'smtp.gmail.com',
+    address: ENV['SMTP_SERVER_ADDR'],
+    domain: ENV['SMTP_SERVER_DOMAIN'],
     port: 587,
     user_name: ENV['WELCOME_MAILER_ADDRESS'],
     password: ENV['WELCOME_MAILER_PASSWORD'],
