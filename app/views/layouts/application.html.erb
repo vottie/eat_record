@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Eatlog</title>
+    <title>食べたレコード</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -13,9 +13,12 @@
 
   <body>
     <div class="container">
+      <h1>食べたレコード</h1>
+      <hr>
+      <%= yield %>
+      <hr>
       <p class="notice"><%= notice %></p>
       <p class="alert"><%= alert %></p>
-      <%= yield %>
     </div>
   </body>
 </html>

@@ -1,4 +1,4 @@
-<h1>データを追加</h1>
+<h3>データを追加</h3>
 
 <p>ユーザ名: <%= link_to current_user.username, edit_user_registration_path %></p>
 
@@ -56,9 +56,11 @@
     <%= form.text_field :article %>
   </div>
 
-  <div>
-    <%= form.submit %>
+  <div class="mt-1">
+    <%= form.submit class: "btn btn-primary btn-sm" %>
   </div>
 <% end %>
 
-<%= link_to "戻る", "/eat_records" %>
+<div class="mt-1">
+  <%= link_to "戻る", "/eat_records", class: "btn btn-primary btn-sm" %>
+</div>

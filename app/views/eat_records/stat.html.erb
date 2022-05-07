@@ -1,4 +1,4 @@
-<h1>食べた記録まとめ</h1>
+<h3>食べた記録まとめ</h3>
 
 <p>ユーザ名: <%= link_to current_user.username, edit_user_registration_path %></p>
 
@@ -11,9 +11,11 @@
   <% end %>
 </ul>
 
-<%= link_to "戻る", eat_records_path %><br>
+<div class="mt-1">
+<%= link_to "戻る", eat_records_path, class: "btn btn-primary btn-sm" %>
 <% if user_signed_in? %>
-  <%= link_to 'ログアウト', destroy_user_session_path, method: :delete %>
+  <%= link_to 'ログアウト', destroy_user_session_path, method: :delete, class: "btn btn-primary btn-sm" %>
   <% else %>
-    <%= link_to 'ログイン', new_user_session_path %>
+    <%= link_to 'ログイン', new_user_session_path, class: "btn btn-primary btn-sm" %>
 <% end %>
+</div>

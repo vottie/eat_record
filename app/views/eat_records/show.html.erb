@@ -1,4 +1,4 @@
-<h1>お店の名前: <%= @eat_record.shop_name %></h1>
+<h3>お店の名前: <%= @eat_record.shop_name %></h3>
 
 <p>ユーザ名: <%= link_to current_user.username, edit_user_registration_path %></p>
 
@@ -39,11 +39,15 @@
   </li>
 </ul>
 
-<%= link_to "Edit", edit_eat_record_path(@eat_record) %>&nbsp;
-<%= link_to "Destroy", eat_record_path(@eat_record), data: {
+<div class="mt-1">
+<%= link_to "Edit", edit_eat_record_path(@eat_record), class: "btn btn-primary btn-sm" %>&nbsp;
+<%= link_to "Destroy", eat_record_path(@eat_record),
+  class: "btn btn-primary btn-sm",
+  data: {
     turbo_method: :delete,
     turbo_confirm: "Are you sure?"
   } %>
-&nbsp;<%= link_to "戻る", "/eat_records" %>
+&nbsp;<%= link_to "戻る", "/eat_records", class: "btn btn-primary btn-sm" %>
+</div>
 
 
