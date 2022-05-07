@@ -1,39 +1,39 @@
 <h1>お店の名前: <%= @eat_record.shop_name %></h1>
 
-<p>ユーザ名: <%= link_to current_user.email, edit_user_registration_path %></p>
+<p>ユーザ名: <%= link_to current_user.username, edit_user_registration_path %></p>
 
-<ul>
-  <li>
+<ul class="list-group list-group">
+  <li class="list-group-item">
     <span class="eatrec-row1">お店の場所:</span>
       &nbsp;<span class="eatrec-row2"><%= @eat_record.place_name %></span>
   </li>
 
-  <li>
+  <li class="list-group-item">
     <span class="eatrec-row1">利用方法:</span>
       &nbsp;<span class="eatrec-row2"><%= @eat_record.usecase %></span>
   </li>
 
-  <li>
+  <li class="list-group-item">
     <span class="eatrec-row1">一緒にいった人:</span>
     <span class="eatrec-row2"><%= @eat_record.eat_with %></span>
   </li>
 
-  <li>
+  <li class="list-group-item">
     <span class="eatrec-row1">食べた日:</span>
     <span class="eatrec-row2"><%= @eat_record.eat_date %></span>
   </li>
 
-  <li>
+  <li class="list-group-item">
     <span class="eatrec-row1">食べた時間:</span>
     <span class="eatrec-row2"><%= @eat_record.eat_time %></span>
   </li>
 
-  <li>
+  <li class="list-group-item">
     <span class="eatrec-row1">食べたメニュー:</span>
     <span class="eatrec-row2"><%= @eat_record.eat_menu %></span>
   </li>
 
-  <li>
+  <li class="list-group-item">
     <span class="eatrec-row1">メモ:</span>
     &nbsp;<span class="eatrec-row2"><%= @eat_record.article %></span>
   </li>

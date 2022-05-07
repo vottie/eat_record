@@ -1,6 +1,6 @@
 <h1> Edit Eat Record</h1>
 
-<p>ユーザ名: <%= link_to current_user.email, edit_user_registration_path %></p>
+<p>ユーザ名: <%= link_to current_user.username, edit_user_registration_path %></p>
 
 <%= render "form", eat_record: @eat_record %>
 
