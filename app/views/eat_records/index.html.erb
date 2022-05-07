@@ -2,9 +2,9 @@
 
 <p>ユーザ名: <%= link_to current_user.username, edit_user_registration_path %></p>
 
-<ul>
+<ul class="list-group list-group">
   <% @eat_records.each do |eat_record| %>
-    <li>
+    <li class="list-group-item">
       <span class="eatrec-row1"><%= link_to eat_record.shop_name, eat_record %></span>
       <span class="eatrec-row2"><%= eat_record.eat_date %></span>
     </li>
@@ -20,4 +20,3 @@
   <% else %>
     <%= link_to 'ログイン', new_user_session_path %>
 <% end %>
-

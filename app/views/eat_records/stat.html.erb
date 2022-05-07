@@ -2,9 +2,9 @@
 
 <p>ユーザ名: <%= link_to current_user.email, edit_user_registration_path %></p>
 
-<ul>
+<ul class="list-group">
   <% @stats.each do |stat| %>
-    <li>
+    <li class="list-group-item">
       <span class="eatrec-row1"><%= stat.name %></span>
       <span class="eatrec-row2"><%= stat.count %></span>
     </li>
@@ -17,4 +17,3 @@
   <% else %>
     <%= link_to 'ログイン', new_user_session_path %>
 <% end %>
-
