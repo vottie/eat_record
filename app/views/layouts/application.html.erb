@@ -7,9 +7,10 @@
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-0KG55FDX3Z"></script>
     <%= javascript_importmap_tags %>
     <%= favicon_link_tag('eat-icon.png') %>
-    <link rel="manifest" href="/manifest.json">
+    <%= auto_discovery_link_tag(:json, {controller: "/eat_records", action: "manifest"}, {rel: "manifest", href: manifest_eat_records_path }) %>
   </head>
 
   <body>

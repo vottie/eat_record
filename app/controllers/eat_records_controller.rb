@@ -85,6 +85,38 @@ class EatRecordsController < ApplicationController
     logger.debug(@stats.inspect)
   end
 
+  def manifest
+    render json: {
+      "lang": "ja",
+      "name": "EatLog",
+      "short_name": "EatLog",
+      "start_url": "https://boltech21.net/eat_records",
+      "display": "standalone",
+      "theme_color": "#0971ac",
+      "icons": [{
+          "src": "/images/eat-icon.png",
+        "sizes": "48x48",
+        "type": "image/png"
+      }, {
+          "src": "/images/eat-icon.png",
+        "sizes": "72x72",
+        "type": "image/png"
+      }, {
+          "src": "/images/eat-icon.png",
+        "sizes": "96x96",
+        "type": "image/png"
+      }, {
+          "src": "/images/eat-icon.png",
+        "sizes": "144x144",
+        "type": "image/png"
+      },{
+          "src": "/images/eat-icon.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      }]
+    }
+  end
+
   private
     def eat_record_params
       params.require(:eat_record).permit(:shop_name, :place_name, :usecase, :eat_with, :eat_date, :eat_time, :eat_menu, :article)

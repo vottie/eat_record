@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   resources :eat_records do
     collection do
       get 'stat'
+      get 'manifest'
     end
     #get "eat_records", to: "eat_records#index"
     #get "eat_records/:id", to: "eat_records#show"
