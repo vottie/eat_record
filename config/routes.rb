@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   
   resources :eat_records do
     collection do
+      get 'index'
       get 'stat'
       get 'manifest'
       get 'desc'
