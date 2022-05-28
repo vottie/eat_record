@@ -14,9 +14,11 @@
   </div>
 
   <div>
-    <%= form.label :use_case, "利用形態" %><br>
+    <%= form.label :use_case, "どこで食べた？``" %><br>
     <%= form.radio_button :use_case, :shop %>
-    <%= form.label :use_case, "店内" %>
+    <%= form.label :use_case, "店" %>
+    <%= form.radio_button :use_case, :home %>
+    <%= form.label :use_case, "家" %>
     <%= form.radio_button :use_case, :take_out %>
     <%= form.label :use_case, "テークアウト" %>
     <%= form.radio_button :use_case, :delivery %>
