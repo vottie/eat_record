@@ -1,4 +1,9 @@
-<h1> Edit Eat Record</h1>
+<h3>編集する</h3>
+
+<p>ユーザ名: <%= link_to current_user.username, edit_user_registration_path %></p>
+
 <%= render "form", eat_record: @eat_record %>
 
-<%= link_to "戻る", eat_record_path(@eat_record) %>
+<div class="mt-1">
+  <%= link_to "戻る", eat_record_path(@eat_record), class: "btn btn-primary btn-sm" %>
+</div>

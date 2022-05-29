@@ -1,0 +1,21 @@
+<h3>食べた記録まとめ</h3>
+
+<p>ユーザ名: <%= link_to current_user.username, edit_user_registration_path %></p>
+
+<ul class="list-group">
+  <% @stats.each do |stat| %>
+    <li class="list-group-item">
+      <span class="eatrec-row1"><%= stat.name %></span>
+      <span class="eatrec-row2"><%= stat.count %></span>
+    </li>
+  <% end %>
+</ul>
+
+<div class="mt-1">
+<%= link_to "戻る", eat_records_path, class: "btn btn-primary btn-sm" %>
+<% if user_signed_in? %>
+  <%= link_to 'ログアウト', destroy_user_session_path, method: :delete, class: "btn btn-primary btn-sm" %>
+  <% else %>
+    <%= link_to 'ログイン', new_user_session_path, class: "btn btn-primary btn-sm" %>
+<% end %>
+</div>

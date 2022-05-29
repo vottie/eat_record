@@ -1,4 +1,6 @@
-<h1>New Eat Record</h1>
+<h3>データを追加</h3>
+
+<p>ユーザ名: <%= link_to current_user.username, edit_user_registration_path %></p>
 
 <%= form_with model: @eat_record do |form| %>
   <div>
@@ -12,11 +14,15 @@
   </div>
 
   <div>
-    <%= form.label :use_case, "利用形態" %><br>
-    <%= form.radio_button :use_case, :shop %>
-    <%= form.label :use_case, "店内" %>
-    <%= form.radio_button :use_case, :take_out %>
-    <%= form.label :use_case, "テークアウト" %>
+    <%= form.label :usecase, "どこで食べた？" %><br>
+    <%= form.radio_button :usecase, :shop %>
+    <%= form.label :usecase, "店" %>
+    <%= form.radio_button :usecase, :home %>
+    <%= form.label :usecase, "家" %>
+    <%= form.radio_button :usecase, :take_out %>
+    <%= form.label :usecase, "テークアウト" %>
+    <%= form.radio_button :usecase, :delivery %>
+    <%= form.label :usecase, "宅配" %>
   </div>
 
   <div>
@@ -54,9 +60,11 @@
     <%= form.text_field :article %>
   </div>
 
-  <div>
-    <%= form.submit %>
+  <div class="mt-1">
+    <%= form.submit class: "btn btn-primary btn-sm" %>
   </div>
 <% end %>
 
-<%= link_to "戻る", "/eat_records" %>
+<div class="mt-1">
+  <%= link_to "戻る", "/eat_records", class: "btn btn-primary btn-sm" %>
+</div>

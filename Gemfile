@@ -44,6 +44,22 @@ gem "bootsnap", require: false
 
 gem 'devise'
 
+gem 'mysql2'
+
+gem 'dotenv-rails'
+
+gem 'omniauth-google-oauth2'
+
+gem 'omniauth-rails_csrf_protection'
+
+gem 'rails-i18n'
+
+gem 'debug'
+
+gem 'cssbundling-rails'
+
+gem 'sd_notify'
+
 # Use Sass to process CSS
 # gem "sassc-rails"
 
@@ -52,7 +68,6 @@ gem 'devise'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
-  gem "debug", platforms: %i[ mri mingw x64_mingw ]
 end
 
 group :development do
@@ -64,6 +79,12 @@ group :development do
 
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
   # gem "spring"
+  
+  # Caistrano
+  gem 'capistrano'
+  gem 'capistrano-rbenv'
+  gem 'capistrano-bundler'
+  gem 'capistrano-rails'
 end
 
 group :test do
@@ -72,3 +93,4 @@ group :test do
   gem "selenium-webdriver"
   gem "webdrivers"
 end
+

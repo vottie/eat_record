@@ -1,18 +1,53 @@
-<h1>お店の名前: <%= @eat_record.shop_name %></h1>
-<p>お店の場所: <%= @eat_record.place_name %></p>
-<p>利用方法: <%= @eat_record.usecase %></p>
-<p>一緒にいった人: <%= @eat_record.eat_with %></p>
-<p>食べた日: <%= @eat_record.eat_date %></p>
-<p>食べた時間: <%= @eat_record.eat_time %></p>
-<p>食べたメニュー: <%= @eat_record.eat_menu %></p>
-<p>メモ: <%= @eat_record.article %></p>
+<h3>お店の名前: <%= @eat_record.shop_name %></h3>
 
-<ul>
-  <li><%= link_to "Edit", edit_eat_record_path(@eat_record) %></li>
-  <li><%= link_to "Destroy", eat_record_path(@eat_record), data: {
+<p>ユーザ名: <%= link_to current_user.username, edit_user_registration_path %></p>
+
+<ul class="list-group list-group">
+  <li class="list-group-item">
+    <span class="eatrec-row1">お店の場所:</span>
+    <span class="eatrec-row2"><%= @eat_record.place_name %></span>
+  </li>
+
+  <li class="list-group-item">
+    <span class="eatrec-row1">利用方法:</span>
+    <span class="eatrec-row2"><%= @eat_record.usecase %></span>
+  </li>
+
+  <li class="list-group-item">
+    <span class="eatrec-row1">一緒にいった人:</span>
+    <span class="eatrec-row2"><%= @eat_record.eat_with %></span>
+  </li>
+
+  <li class="list-group-item">
+    <span class="eatrec-row1">食べた日:</span>
+    <span class="eatrec-row2"><%= @eat_record.eat_date %></span>
+  </li>
+
+  <li class="list-group-item">
+    <span class="eatrec-row1">食べた時間:</span>
+    <span class="eatrec-row2"><%= @eat_record.eat_time %></span>
+  </li>
+
+  <li class="list-group-item">
+    <span class="eatrec-row1">食べたメニュー:</span>
+    <span class="eatrec-row2"><%= @eat_record.eat_menu %></span>
+  </li>
+
+  <li class="list-group-item">
+    <span class="eatrec-row1">メモ:</span>
+    <span class="eatrec-row2"><%= @eat_record.article %></span>
+  </li>
+</ul>
+
+<div class="mt-1">
+<%= link_to "編集", edit_eat_record_path(@eat_record), class: "btn btn-primary btn-sm" %>&nbsp;
+<%= link_to "削除", eat_record_path(@eat_record),
+  class: "btn btn-primary btn-sm",
+  data: {
     turbo_method: :delete,
     turbo_confirm: "Are you sure?"
-  } %></li>
-  <li><%= link_to "戻る", "/eat_records" %></li>
-</ul>
+  } %>
+&nbsp;<%= link_to "戻る", "/eat_records", class: "btn btn-primary btn-sm" %>
+</div>
+
 
