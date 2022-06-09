@@ -60,6 +60,10 @@ gem 'cssbundling-rails'
 
 gem 'sd_notify'
 
+gem 'gmaps4rails'
+
+gem 'geocoder'
+
 # Use Sass to process CSS
 # gem "sassc-rails"
 

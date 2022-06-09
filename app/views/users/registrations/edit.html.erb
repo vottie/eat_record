@@ -36,6 +36,21 @@
     <%= f.password_field :current_password, autocomplete: "current-password" %>
   </div>
 
+  <div class="field">
+    <%= f.label "郵便番号" %><br />
+    <%= f.text_field :zip %>
+  </div>
+
+  <div class="field">
+    <%= f.label "緯度" %><br />
+    <%= f.text_field :latitude %>
+  </div>
+
+  <div class="field">
+    <%= f.label "経度" %><br />
+    <%= f.text_field :longitude %>
+  </div>
+
   <div class="actions">
     <%= f.submit "Update" %>
   </div>

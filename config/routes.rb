@@ -13,6 +13,7 @@ Rails.application.routes.draw do
       get 'stat'
       get 'manifest'
       get 'desc'
+      get 'map'
       get 'new', to: "eat_records#new"
       post 'new', to: "eat_records#create"
     end

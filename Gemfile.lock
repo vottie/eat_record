@@ -121,8 +121,10 @@ GEM
       faraday-net_http (~> 2.0)
       ruby2_keywords (>= 0.0.4)
     faraday-net_http (2.0.2)
+    geocoder (1.8.0)
     globalid (1.0.0)
       activesupport (>= 5.0)
+    gmaps4rails (2.1.2)
     hashie (5.0.0)
     i18n (1.10.0)
       concurrent-ruby (~> 1.0)
@@ -306,6 +308,8 @@ DEPENDENCIES
   debug
   devise
   dotenv-rails
+  geocoder
+  gmaps4rails
   importmap-rails
   jbuilder
   mysql2

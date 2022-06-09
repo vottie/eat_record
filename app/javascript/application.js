@@ -2,4 +2,6 @@
 import "@hotwired/turbo-rails"
 import "controllers"
 import * as bootstrap from "bootstrap"
-import "serviceWorker.js"
+//import "./serviceWorker.js"
+//import "./gtag.js"
+//import "./map.js"

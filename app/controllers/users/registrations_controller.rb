@@ -1,3 +1,7 @@
+require 'open-uri'
+require 'uri'
+require "rexml/document"
+
 # frozen_string_literal: true
 
 class Users::RegistrationsController < Devise::RegistrationsController
@@ -28,6 +32,16 @@ class Users::RegistrationsController < Devise::RegistrationsController
     logger.debug("RegistrationsController.update()")
     super
     logger.debug(current_user.inspect)
+    #logger.debug("#{params[:user][:zip]}")
+    if params[:user][:zip] != nil
+      logger.debug("update() #{params[:zip]}")
+      url = 'https://geoapi.heartrails.com/api/json?method=searchByPostal&postal='
+      res = OpenURI.open_uri(url+params[:user][:zip])
+      hash = JSON.load(res.read)
+      logger.debug(hash["response"]["location"][0])
+      params[:user][:latitude] = hash["response"]["location"][0]["y"].to_f
+      params[:user][:longitude] = hash["response"]["location"][0]["x"].to_f
+    end
     current_user.update(user_record_params)
   end
 
@@ -69,6 +83,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # end
   private
     def user_record_params
-      params.require(:user).permit(:email, :encrypted_password, :reset_password_token, :reset_password_sent_at, :remember_created_at, :created_at, :update_at, :provider, :uid, :username)
+      params.require(:user).permit(:email, :encrypted_password, :reset_password_token, :reset_password_sent_at, :remember_created_at, :created_at, :update_at, :provider, :uid, :username, :zip, :latitude, :longitude)
     end
 end

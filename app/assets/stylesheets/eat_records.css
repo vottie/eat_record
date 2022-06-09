@@ -10,3 +10,8 @@ span.eatrec-row2 {
     display: block;
     margin-left: 180px;
 }
+
+#map {
+    height: 300px;
+    width:  400px;
+}

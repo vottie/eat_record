@@ -117,6 +117,10 @@ class EatRecordsController < ApplicationController
     }
   end
 
+  def map
+
+  end
+
   private
     def eat_record_params
       params.require(:eat_record).permit(:shop_name, :place_name, :usecase, :eat_with, :eat_date, :eat_time, :eat_menu, :article)
