@@ -318,6 +318,7 @@ DEPENDENCIES
   puma (~> 5.0)
   rails (~> 7.0.2, >= 7.0.2.3)
   rails-i18n
+  rexml (~> 3.2, >= 3.2.5)
   sd_notify
   selenium-webdriver
   sprockets-rails

@@ -64,6 +64,8 @@ gem 'gmaps4rails'
 
 gem 'geocoder'
 
+gem 'rexml', '~> 3.2', '>= 3.2.5'
+
 # Use Sass to process CSS
 # gem "sassc-rails"
 
