@@ -53,36 +53,30 @@ class EatRecordsController < ApplicationController
     # @eat_records = EatRecord.select(:id, :shop_name).distinct.where(user_id: @user).order(eat_date: "DESC")
     #@eat_records = EatRecord.select(:shop_name).distinct.where(user_id: @user).order(eat_date: "DESC")
     
-    @stats = Array.new
-    skip = false
+    h = Hash.new
     @eat_records.each do |record|
-      logger.debug(record.inspect)
-      if @stats.size == 0 then
-        stat = EatStat.new
-        stat.name = record.shop_name
-        stat.count = 1
-        @stats.push(stat)
+      #logger.debug(record.inspect)
+      if h.has_key?(record.shop_name) == false then
+        h[record.shop_name] = 1
+        #logger.debug("new record added #{record.shop_name}")
+        #logger.debug("new record: #{h.inspect}")
       else
-        @stats.each do |s|
-          if record.shop_name == s.name then
-            logger.debug("#{s.name} count up")
-            s.count = s.count + 1
-            skip = true
-            break
-          end
-        end # end of stats loop
-        # not found
-        if skip == false then
-          logger.debug("#{record.shop_name} create")
-          stat = EatStat.new
-          stat.name = record.shop_name
-          stat.count = 1
-          @stats.push(stat)
-        end
+        #logger.debug("count up #{h.inspect}")
+        count = h[record.shop_name]
+        h[record.shop_name] = count.next
       end
     end
-    
-    logger.debug(@stats.inspect)
+
+    sh = h.sort_by {|_,v| -v}.to_h
+
+    @stats = Array.new
+    sh.each do |k,v|
+      #logger.debug("key=#{k}, value=#{v}")
+      rslt = EatStat.new
+      rslt.name = k
+      rslt.count = v
+      @stats.push(rslt)
+    end
   end
 
   def manifest
