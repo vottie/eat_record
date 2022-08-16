@@ -21,6 +21,13 @@ Rails.application.routes.draw do
     #get "eat_records/:id", to: "eat_records#show"
   end
 
+  resources :shops do
+    collection do
+      get 'index'
+      post 'update_latlng', to: "shops#update_latlng"
+    end
+  end
+
   devise_for :users, controllers: {
     sessions: "users/sessions",
     registrations: "users/registrations",
