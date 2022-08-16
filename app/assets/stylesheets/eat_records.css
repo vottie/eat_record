@@ -11,7 +11,36 @@ span.eatrec-row2 {
     margin-left: 180px;
 }
 
+span.shop-row1 {
+    float:left;
+}
+
+span.shop-row2 {
+    display: block;
+    margin-left: 120px;
+}
+
+span.shop-row3 {
+    display: block;
+    margin-left: 80px;
+}
+
+span.shop-row4 {
+    display: block;
+    margin-left: 240px;
+}
+
+span.shop-row5 {
+    display: block;
+    margin-left: 80px;
+}
+
+span.shop-row6 {
+    display: block;
+    margin-left: 80px;
+}
+
 #map {
-    height: 300px;
-    width:  400px;
+    height: 600px;
+    width:  800px;
 }
