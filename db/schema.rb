@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_05_30_163537) do
+ActiveRecord::Schema[7.0].define(version: 2022_08_15_171116) do
   create_table "eat_records", charset: "utf8mb3", force: :cascade do |t|
     t.string "shop_name"
     t.string "place_name"
@@ -34,6 +34,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_30_163537) do
     t.string "longitude"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "postcode"
   end
 
   create_table "users", charset: "utf8mb3", force: :cascade do |t|
