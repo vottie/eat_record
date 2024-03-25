@@ -5,6 +5,7 @@
 #
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
+=begin
 Shop.create(
   name: 'KFC',
   place: '子母口店'
@@ -28,3 +29,25 @@ Shop.create(
   name: '麺小屋てち',
   place: ''
 )
+=end
+pswd = ENV["SEEDS_PASSWORD"]
+mail = ENV["SEEDS_EMAIL"]
+
+users = [
+  {email: mail, password: pswd, username: 'guest'}
+]
+
+users.each do |user|
+  user_data = User.find_by(email: user[:email])
+  if user_data.nil?
+    User.create(
+      email: user[:email],
+      password: user[:password],
+      username: user[:username]
+    )
+  else
+#    puts "user email    #{user[:email]}"
+#    puts "user password #{user[:password]}"
+  end
+end
+
