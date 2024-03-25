@@ -10,6 +10,8 @@
   <% end %>
 </ul>
 
+<%= paginate @eat_records %>
+
 <div class="mt-1">
 <%= link_to "通算の記録", stat_eat_records_path, class: "btn btn-primary btn-sm" %>
 

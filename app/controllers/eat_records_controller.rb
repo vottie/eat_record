@@ -4,7 +4,7 @@ class EatRecordsController < ApplicationController
 
   def index
     @user = current_user.id
-    @eat_records = EatRecord.where(user_id: @user).order(eat_date: "DESC")
+    @eat_records = EatRecord.where(user_id: @user).order(eat_date: "DESC").page(params[:page])
   end
 
   def show

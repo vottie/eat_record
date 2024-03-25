@@ -60,6 +60,8 @@ gem 'cssbundling-rails'
 
 gem 'sd_notify'
 
+gem 'kaminari'
+
 # Use Sass to process CSS
 # gem "sassc-rails"
 
