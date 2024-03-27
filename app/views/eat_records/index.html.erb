@@ -15,7 +15,7 @@
 <div class="mt-1">
 <%= link_to "通算の記録", stat_eat_records_path, class: "btn btn-primary btn-sm" %>
 
-<%= link_to "新たに登録", "eat_records/new", class: "btn btn-primary btn-sm" %>
+<%= link_to "新たに登録", new_eat_record_path, class: "btn btn-primary btn-sm" %>
 
 <% if user_signed_in? %>
   <%= link_to 'ログアウト', destroy_user_session_path, method: :delete , class: "btn btn-primary btn-sm"%>
