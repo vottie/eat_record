@@ -74,6 +74,9 @@ GEM
     bindex (0.8.1)
     bootsnap (1.11.1)
       msgpack (~> 1.2)
+    bootstrap4-kaminari-views (1.0.1)
+      kaminari (>= 0.13)
+      rails (>= 3.1)
     builder (3.2.4)
     capistrano (3.17.0)
       airbrussh (>= 1.0.0)
@@ -309,6 +312,7 @@ PLATFORMS
 
 DEPENDENCIES
   bootsnap
+  bootstrap4-kaminari-views
   capistrano
   capistrano-bundler
   capistrano-rails
