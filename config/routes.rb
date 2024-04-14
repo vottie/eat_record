@@ -15,6 +15,7 @@ Rails.application.routes.draw do
       get 'desc'
       get 'new', to: "eat_records#new"
       post 'new', to: "eat_records#create"
+      get 'page/:page', to: "eat_records#index"
     end
     #get "eat_records", to: "eat_records#index"
     #get "eat_records/:id", to: "eat_records#show"
