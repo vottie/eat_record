@@ -336,7 +336,7 @@ DEPENDENCIES
   rails-i18n
   sd_notify
   selenium-webdriver
-  sprockets-rails
+  sprockets-rails (~> 3.4, >= 3.4.2)
   sqlite3 (~> 1.7, >= 1.7.3)
   stimulus-rails
   turbo-rails
