@@ -6,7 +6,7 @@ set :repo_url, "https://github.com/vottie/eat_record.git"
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
-set :branch, ENV['BRANCH'] || "develop"
+set :branch, ENV['BRANCH'] || "main"
 
 # Default deploy_to directory is /var/www/my_app_name
 set :deploy_to, "/var/www/html/rails/eat_records"
