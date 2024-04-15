@@ -7,7 +7,6 @@
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-0KG55FDX3Z"></script>
     <%= javascript_importmap_tags %>
     <%= favicon_link_tag('eat-icon.png') %>
     <%= auto_discovery_link_tag(:json, {controller: "/eat_records", action: "manifest"}, {rel: "manifest", href: manifest_eat_records_path }) %>
@@ -26,9 +25,9 @@
               <li class="nav-item">
                 <%= link_to "説明", desc_eat_records_path, class: "nav-link active" %>
               </li>
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="https://boltech21.net">ドメインのトップ</a>
-              </li>
+              <!-- li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="">ドメインのトップ</a>
+              </li -->
             </ul>
           </div>
         </div>
@@ -42,18 +41,6 @@
       <p class="alert"><%= alert %></p>
       <footer class="footer mt-auto py-3 bg-light">
         <div class="container">
-          <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6488383407705612"
-               crossorigin="anonymous"></script>
-          <!-- eat-records-ads -->
-          <ins class="adsbygoogle"
-               style="display:block"
-               data-ad-client="ca-pub-6488383407705612"
-               data-ad-slot="3953881209"
-               data-ad-format="auto"
-               data-full-width-responsive="true"></ins>
-          <script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-          </script>
           <span class="text-muted"></span>
         </div>
       </footer>
