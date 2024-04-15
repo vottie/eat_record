@@ -1,5 +1,5 @@
 # config valid for current version and patch releases of Capistrano
-lock "~> 3.17.0"
+lock "~> 3.18.1"
 
 set :application, "eat_records"
 set :repo_url, "https://github.com/vottie/eat_record.git"
