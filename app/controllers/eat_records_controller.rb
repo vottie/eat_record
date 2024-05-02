@@ -50,39 +50,23 @@ class EatRecordsController < ApplicationController
   def stat
     @user = current_user.id
     @eat_records = EatRecord.where(user_id: @user).order(eat_date: "DESC")
-    # @eat_records = EatRecord.select(:id, :shop_name).distinct.where(user_id: @user).order(eat_date: "DESC")
-    #@eat_records = EatRecord.select(:shop_name).distinct.where(user_id: @user).order(eat_date: "DESC")
-    
     @stats = Array.new
-    skip = false
-    @eat_records.each do |record|
-      logger.debug(record.inspect)
-      if @stats.size == 0 then
-        stat = EatStat.new
-        stat.name = record.shop_name
-        stat.count = 1
-        @stats.push(stat)
-      else
-        @stats.each do |s|
-          if record.shop_name == s.name then
-            logger.debug("#{s.name} count up")
-            s.count = s.count + 1
-            skip = true
-            break
-          end
-        end # end of stats loop
-        # not found
-        if skip == false then
-          logger.debug("#{record.shop_name} create")
-          stat = EatStat.new
-          stat.name = record.shop_name
-          stat.count = 1
-          @stats.push(stat)
-        end
-      end
-    end
     
-    logger.debug(@stats.inspect)
+    # Count the number of occurrences of each element in the array.
+    records = Array.new
+    @eat_records.each do |record|
+      records.push(record.shop_name)
+    end
+    counts = records.tally
+
+    sort_counts = counts.sort_by { |key, value| value }.reverse
+    sort_counts.each { |key, value| 
+      # logger.debug("#{key} : #{value}")
+      stat = EatStat.new
+      stat.name = key
+      stat.count = value
+      @stats.push(stat)
+    }
   end
 
   def manifest
