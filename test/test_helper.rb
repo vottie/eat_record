@@ -11,3 +11,8 @@ class ActiveSupport::TestCase
 
   # Add more helper methods to be used by all tests here...
 end
+
+class ActionDispatch::IntegrationTest
+  # sign_in / sign_out を統合テストで使う
+  include Devise::Test::IntegrationHelpers
+end

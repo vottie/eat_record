@@ -1,21 +1,40 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+# alice: 同じ店が 2 件(統計の集計順の確認用)、bob: 1 件(他ユーザーの記録が混ざらないことの確認用)
+ramen_1:
+  shop_name: Ramen Taro
+  place_name: Tokyo
+  usecase: lunch
+  eat_with: friend
+  eat_date: 2025-01-10
+  eat_time: noon
+  eat_menu: ramen
+  user_id: <%= ActiveRecord::FixtureSet.identify(:alice) %>
 
-one:
-  shop_name: MyString
-  place_name: MyString
-  usecase: MyString
-  eat_with: MyString
-  eat_date: 2022-04-07
-  eat_time: MyString
-  eat_menu: MyString
-  eat_times: 1
+ramen_2:
+  shop_name: Ramen Taro
+  place_name: Tokyo
+  usecase: dinner
+  eat_with: alone
+  eat_date: 2025-02-20
+  eat_time: night
+  eat_menu: ramen
+  user_id: <%= ActiveRecord::FixtureSet.identify(:alice) %>
 
-two:
-  shop_name: MyString
-  place_name: MyString
-  usecase: MyString
-  eat_with: MyString
-  eat_date: 2022-04-07
-  eat_time: MyString
-  eat_menu: MyString
-  eat_times: 1
+curry:
+  shop_name: Curry House
+  place_name: Osaka
+  usecase: lunch
+  eat_with: family
+  eat_date: 2025-03-05
+  eat_time: noon
+  eat_menu: curry
+  user_id: <%= ActiveRecord::FixtureSet.identify(:alice) %>
+
+sushi:
+  shop_name: Sushi Bar
+  place_name: Kyoto
+  usecase: dinner
+  eat_with: friend
+  eat_date: 2025-03-06
+  eat_time: night
+  eat_menu: sushi
+  user_id: <%= ActiveRecord::FixtureSet.identify(:bob) %>
