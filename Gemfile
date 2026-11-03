@@ -56,7 +56,11 @@ gem 'rails-i18n'
 
 gem 'debug'
 
-gem 'cssbundling-rails'
+# Compile Sass without Node (Dart Sass is bundled in sass-embedded)
+gem "dartsass-rails"
+
+# Bootstrap CSS (Sass) and its Popper dependency
+gem "bootstrap", "~> 5.3.8"
 
 gem 'sd_notify'
 
