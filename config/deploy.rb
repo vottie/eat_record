@@ -27,7 +27,7 @@ set :rbenv_ruby, File.read('.ruby-version').strip
 
 
 # Default value for :linked_files is []
-append :linked_files, "config/master.key","config/credentials/production.key"
+append :linked_files, "config/master.key","config/credentials/production.key",".env"
 
 # Default value for linked_dirs is []
 #append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "tmp/webpacker", "public/system", "vendor", "storage"
