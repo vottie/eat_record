@@ -64,6 +64,20 @@ Rails.application.configure do
 
   config.action_mailer.perform_caching = false
 
+  # Links in mails (Devise etc.) point at the public host (HOST in .env).
+  config.action_mailer.default_url_options = { host: ENV['HOST'], protocol: 'https' }
+  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address: ENV['SMTP_SERVER_ADDR'],
+    domain: ENV['SMTP_SERVER_DOMAIN'],
+    port: 587,
+    user_name: ENV['WELCOME_MAILER_ADDRESS'],
+    password: ENV['WELCOME_MAILER_PASSWORD'],
+    authentication: 'login',
+    enable_starttls_auto: true
+  }
+
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
