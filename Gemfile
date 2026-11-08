@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.1.2"
+ruby "3.3.13"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.1.0"
@@ -9,9 +9,6 @@ gem "rails", "~> 7.1.0"
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails", "~> 3.4", ">=3.4.2"
 
-# Keep the 1.16 series: nokogiri 1.17+ names its Linux gems x86_64-linux-gnu, which the
-# current RubyGems/Bundler (Ruby 3.1) cannot lock, so servers would compile libxml2 from source.
-gem "nokogiri", "~> 1.16.8"
 
 # Use sqlite3 as the database for Active Record
 gem "sqlite3", "~> 1.7", ">= 1.7.3"
