@@ -30,4 +30,12 @@ ActionMailer::Base.default_url_options = { host: "example.com" }
 class ActionDispatch::IntegrationTest
   # sign_in / sign_out を統合テストで使う
   include Devise::Test::IntegrationHelpers
+
+  # 新規登録は、既定で閉じている(環境変数 ALLOW_SIGNUP=1 で開く)。テストごとに元の値へ戻す。
+  setup { @signup_env_before = ENV["ALLOW_SIGNUP"] }
+  teardown { @signup_env_before.nil? ? ENV.delete("ALLOW_SIGNUP") : ENV["ALLOW_SIGNUP"] = @signup_env_before }
+
+  def signup_open!(open = true)
+    open ? ENV["ALLOW_SIGNUP"] = "1" : ENV.delete("ALLOW_SIGNUP")
+  end
 end

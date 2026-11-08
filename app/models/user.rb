@@ -8,9 +8,13 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable,
          :omniauthable, omniauth_providers: [:google_oauth2]
 
-  def self.from_omniauth(auth)
+  # create: false のときは、既存のユーザーを探すだけで、作らない(新規登録を閉じている間の Google ログイン)
+  def self.from_omniauth(auth, create: true)
     logger.debug("aaaaaa")
-    where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
+    scope = where(provider: auth.provider, uid: auth.uid)
+    return scope.first unless create
+
+    scope.first_or_create do |user|
       user.email = auth.info.email
       user.password = Devise.friendly_token[0,20]
       #

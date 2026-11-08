@@ -2,6 +2,7 @@ require "test_helper"
 
 class AuthenticationTest < ActionDispatch::IntegrationTest
   test "sign in and sign up pages render" do
+    signup_open!
     get new_user_session_path
     assert_response :success
 
