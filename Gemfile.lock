@@ -151,6 +151,12 @@ GEM
     google-protobuf (4.33.6)
       bigdecimal
       rake (>= 13)
+    google-protobuf (4.33.6-arm64-darwin)
+      bigdecimal
+      rake (>= 13)
+    google-protobuf (4.33.6-x86_64-linux-gnu)
+      bigdecimal
+      rake (>= 13)
     hashie (5.0.0)
     i18n (1.15.2)
       concurrent-ruby (~> 1.0)
@@ -311,6 +317,10 @@ GEM
     sass-embedded (1.102.0)
       google-protobuf (~> 4.31)
       rake (>= 13)
+    sass-embedded (1.102.0-arm64-darwin)
+      google-protobuf (~> 4.31)
+    sass-embedded (1.102.0-x86_64-linux-gnu)
+      google-protobuf (~> 4.31)
     sd_notify (0.1.1)
     securerandom (0.4.1)
     selenium-webdriver (4.10.0)
@@ -412,7 +422,7 @@ DEPENDENCIES
   webdrivers
 
 RUBY VERSION
-   ruby 3.1.2p20
+   ruby 3.3.13p207
 
 BUNDLED WITH
-   2.3.10
+   2.5.22
