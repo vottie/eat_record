@@ -27,7 +27,9 @@ set :rbenv_ruby, File.read('.ruby-version').strip
 
 
 # Default value for :linked_files is []
-append :linked_files, "config/master.key","config/credentials/production.key",".env"
+# credentials.yml.enc は config/master.key で復号する。Rails 7.1 以降は、config/credentials/production.key が
+# あると(production.yml.enc が無くても)そちらを鍵に使い、InvalidMessage で起動できなくなるため、リンクしない。
+append :linked_files, "config/master.key",".env"
 
 # Default value for linked_dirs is []
 #append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "tmp/webpacker", "public/system", "vendor", "storage"
