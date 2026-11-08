@@ -1,4 +1,7 @@
 class User < ApplicationRecord
+  # アカウントを削除すると、そのユーザーの記録も削除する(eat_records.user_id の外部キーのため)
+  has_many :eat_records, dependent: :destroy
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
