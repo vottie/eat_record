@@ -4,7 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby "3.3.13"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 7.2.0"
+gem "rails", "~> 8.0.0"
 
 # minitest 6 は Rails 7.2 のテストランナーと互換性がない(wrong number of arguments)ため 5 系に固定する
 gem "minitest", "< 6"
@@ -14,7 +14,7 @@ gem "sprockets-rails", "~> 3.4", ">=3.4.2"
 
 
 # Use sqlite3 as the database for Active Record
-gem "sqlite3", "~> 1.7", ">= 1.7.3"
+gem "sqlite3", ">= 2.1"
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", "~> 5.6"
@@ -102,7 +102,6 @@ end
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
-  gem "selenium-webdriver"
-  gem "webdrivers"
+  gem "selenium-webdriver", ">= 4.11"
 end
 
