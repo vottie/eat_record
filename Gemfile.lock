@@ -268,7 +268,7 @@ GEM
     prism (2.1.0-arm64-darwin)
     prism (2.1.0-x86_64-linux-gnu)
     public_suffix (5.0.5)
-    puma (5.6.8)
+    puma (8.0.2)
       nio4r (~> 2.0)
     racc (1.8.1)
     rack (2.2.25)
@@ -425,7 +425,7 @@ DEPENDENCIES
   mysql2
   omniauth-google-oauth2
   omniauth-rails_csrf_protection
-  puma (~> 5.6)
+  puma (~> 8.0)
   rails (~> 8.1.0)
   rails-i18n
   sd_notify

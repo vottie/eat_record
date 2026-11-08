@@ -17,7 +17,7 @@ gem "sprockets-rails", "~> 3.4", ">=3.4.2"
 gem "sqlite3", ">= 2.1"
 
 # Use the Puma web server [https://github.com/puma/puma]
-gem "puma", "~> 5.6"
+gem "puma", "~> 8.0"
 
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "importmap-rails"
