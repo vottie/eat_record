@@ -1,5 +1,7 @@
 class EatRecordsController < ApplicationController
   before_action :authenticate_user!
+  # 詳細・編集・更新・削除は、ログインユーザー自身の記録だけを対象にする(他人の記録は 404)
+  before_action :set_eat_record, only: %i[show edit update destroy]
   protect_from_forgery
 
   def index
@@ -8,7 +10,6 @@ class EatRecordsController < ApplicationController
   end
 
   def show
-    @eat_record = EatRecord.find(params[:id])
   end
 
   def new
@@ -22,26 +23,22 @@ class EatRecordsController < ApplicationController
     if @eat_record.save
       redirect_to @eat_record
     else
-      render :new, status: :unprocessable_entitiy
+      render :new, status: :unprocessable_entity
     end
   end
 
   def edit
-    @eat_record = EatRecord.find(params[:id])
   end
 
   def update
-    @eat_record = EatRecord.find(params[:id])
-
     if @eat_record.update(eat_record_params)
       redirect_to @eat_record
     else
-      render :edit, status: :unporcessable_entity
+      render :edit, status: :unprocessable_entity
     end
   end
 
   def destroy
-    @eat_record = EatRecord.find(params[:id])
     @eat_record.destroy
 
     redirect_to root_path, status: :see_other
@@ -102,6 +99,10 @@ class EatRecordsController < ApplicationController
   end
 
   private
+    def set_eat_record
+      @eat_record = EatRecord.where(user_id: current_user.id).find(params[:id])
+    end
+
     def eat_record_params
       params.require(:eat_record).permit(:shop_name, :place_name, :usecase, :eat_with, :eat_date, :eat_time, :eat_menu, :article)
     end

@@ -33,13 +33,23 @@ class RegistrationTest < ActionDispatch::IntegrationTest
       "an email that is already taken" => { email: users(:alice).email },
       "a password confirmation that does not match" => { password_confirmation: "different" },
       "a password that is too short" => { password: "short", password_confirmation: "short" },
+      "a blank email" => { email: "" },
       "an email without @" => { email: "not-an-email" }
     }.each do |label, overrides|
       assert_no_difference("User.count", "sign up with #{label}") do
-        post user_registration_path, params: sign_up_params(overrides)
+        assert_no_emails do
+          post user_registration_path, params: sign_up_params(overrides)
+        end
       end
       assert_response :success, "sign up with #{label}"
     end
+  end
+
+  test "no welcome mail is sent to the address of a rejected sign up" do
+    assert_no_emails do
+      post user_registration_path, params: sign_up_params(email: "someone-else@example.com", password_confirmation: "different")
+    end
+    assert_response :success
   end
 
   test "a signed up user can sign in again with the password" do

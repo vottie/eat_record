@@ -12,9 +12,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # POST /resource
   def create
-    super
+    # 登録に成功したときだけ、登録されたアドレスへウェルカムメールを送る
+    super do |resource|
+      NotificationMailer.welcome_email(resource.email).deliver_now if resource.persisted?
+    end
     logger.debug("RegistrationsController.create()")
-    NotificationMailer.welcome_email(params[:user][:email]).deliver
   end
 
   # GET /resource/edit
@@ -27,8 +29,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def update
     logger.debug("RegistrationsController.update()")
     super
-    logger.debug(current_user.inspect)
-    current_user.update(user_record_params)
   end
 
   # DELETE /resource
@@ -67,8 +67,4 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # def after_inactive_sign_up_path_for(resource)
   #   super(resource)
   # end
-  private
-    def user_record_params
-      params.require(:user).permit(:email, :encrypted_password, :reset_password_token, :reset_password_sent_at, :remember_created_at, :created_at, :update_at, :provider, :uid, :username)
-    end
 end

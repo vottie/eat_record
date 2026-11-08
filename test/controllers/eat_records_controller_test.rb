@@ -26,6 +26,44 @@ class EatRecordsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Ramen Taro", @record.reload.shop_name
   end
 
+  # sign_in は次の 1 回のリクエストにだけ有効で、404(例外)で終わったリクエストの後はセッションが残らない。
+  # このため、リクエストごとにサインインし直す。
+  test "another user's record cannot be shown, edited, updated or destroyed" do
+    other = users(:bob)
+
+    sign_in other
+    get eat_record_path(@record)
+    assert_response :not_found
+
+    sign_in other
+    get edit_eat_record_path(@record)
+    assert_response :not_found
+
+    sign_in other
+    patch eat_record_path(@record), params: { eat_record: { shop_name: "Changed" } }
+    assert_response :not_found
+    assert_equal "Ramen Taro", @record.reload.shop_name
+
+    sign_in other
+    assert_no_difference("EatRecord.count") do
+      delete eat_record_path(@record)
+      assert_response :not_found
+    end
+  end
+
+  test "a signed in user can still show, edit, update and destroy their own record" do
+    sign_in @user
+
+    get eat_record_path(@record)
+    assert_response :success
+    get edit_eat_record_path(@record)
+    assert_response :success
+    patch eat_record_path(@record), params: { eat_record: { shop_name: "Own Change" } }
+    assert_redirected_to eat_record_path(@record)
+    assert_equal "Own Change", @record.reload.shop_name
+    assert_difference("EatRecord.count", -1) { delete eat_record_path(@record) }
+  end
+
   test "show of a record that does not exist is a 404" do
     sign_in @user
     get eat_record_path(0)
