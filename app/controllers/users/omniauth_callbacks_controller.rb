@@ -25,11 +25,14 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def callback_for(provider)
     provider = provider.to_s
     logger.debug("OmniauthCallbacksController.provider #{provider}")
-    @user = User.from_omniauth(request.env["omniauth.auth"])
+    # 新規登録が閉じている間は、既存のユーザーだけがログインできる(ユーザーの自動作成をしない)
+    @user = User.from_omniauth(request.env["omniauth.auth"], create: signup_open?)
     logger.debug("OmniauthCallbacksController.callback_for #{@user}")
     #@user = User.find_or_create_for_oauth(request.env["omniauth.auth"])
 
-    if @user.persisted?
+    if @user.nil?
+      redirect_to new_user_session_path, notice: SIGNUP_CLOSED_NOTICE
+    elsif @user.persisted?
       sign_in_and_redirect @user, event: :authentication
       set_flash_message(:notice, :success, kind: "#{provider}".capitalize) if is_navigational_format?
     else

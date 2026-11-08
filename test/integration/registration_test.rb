@@ -2,6 +2,8 @@ require "test_helper"
 
 # 新規登録(Devise の registrations + ウェルカムメール)
 class RegistrationTest < ActionDispatch::IntegrationTest
+  setup { signup_open! }
+
   def sign_up_params(overrides = {})
     { user: { username: "newbie", email: "newbie@example.com",
               password: "password123", password_confirmation: "password123" }.merge(overrides) }

@@ -59,6 +59,7 @@ class OmniauthTest < ActionDispatch::IntegrationTest
   end
 
   test "the callback creates the user on first sign in and signs in" do
+    signup_open!
     with_omniauth_test_mode(mock_google) do
       assert_difference("User.count", 1) do
         get "#{GOOGLE_PATH}/callback"
@@ -75,6 +76,7 @@ class OmniauthTest < ActionDispatch::IntegrationTest
   end
 
   test "the callback signs in the existing user without creating another" do
+    signup_open!
     with_omniauth_test_mode(mock_google) do
       get "#{GOOGLE_PATH}/callback"
       get destroy_user_session_path

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Users::RegistrationsController < Devise::RegistrationsController
+  # 新規登録が閉じている間は、登録の画面と送信を受け付けない(既存ユーザーのアカウント編集・削除は、これまでどおり)
+  before_action :require_signup_open, only: %i[new create]
   # before_action :configure_sign_up_params, only: [:create]
   # before_action :configure_account_update_params, only: [:update]
 
@@ -67,4 +69,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # def after_inactive_sign_up_path_for(resource)
   #   super(resource)
   # end
+
+  private
+
+  def require_signup_open
+    redirect_to new_user_session_path, notice: SIGNUP_CLOSED_NOTICE unless signup_open?
+  end
 end
