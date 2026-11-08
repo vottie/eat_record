@@ -13,6 +13,26 @@ class EatRecordsControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "writes are rejected and change nothing when not signed in" do
+    assert_no_difference("EatRecord.count") do
+      post new_eat_record_path, params: { eat_record: { shop_name: "Anonymous Cafe" } }
+      assert_redirected_to new_user_session_path
+      delete eat_record_path(@record)
+      assert_redirected_to new_user_session_path
+    end
+
+    patch eat_record_path(@record), params: { eat_record: { shop_name: "Changed" } }
+    assert_redirected_to new_user_session_path
+    assert_equal "Ramen Taro", @record.reload.shop_name
+  end
+
+  test "show of a record that does not exist is a 404" do
+    sign_in @user
+    get eat_record_path(0)
+
+    assert_response :not_found
+  end
+
   test "index lists only the signed in user's records" do
     sign_in @user
     get eat_records_path

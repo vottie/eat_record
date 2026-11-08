@@ -7,6 +7,10 @@ capybara-*.html
 /db/*.sqlite3
 /db/*.sqlite3-journal
 /db/*.sqlite3-[0-9]*
+# テストの並列実行(50 件以上)が作る、ワーカーごとの DB と、SQLite の WAL ファイル
+/db/*.sqlite3_[0-9]*
+/db/*.sqlite3-shm
+/db/*.sqlite3-wal
 /public/system
 /coverage/
 /spec/tmp
