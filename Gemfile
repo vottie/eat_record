@@ -4,7 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby "3.3.13"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 8.0.0"
+gem "rails", "~> 8.1.0"
 
 # minitest 6 は Rails 7.2 のテストランナーと互換性がない(wrong number of arguments)ため 5 系に固定する
 gem "minitest", "< 6"
@@ -93,7 +93,7 @@ group :development do
   # gem "spring"
   
   # Caistrano
-  gem 'capistrano'
+  gem 'capistrano', '~> 3.19.2'
   gem 'capistrano-rbenv'
   gem 'capistrano-bundler'
   gem 'capistrano-rails'
