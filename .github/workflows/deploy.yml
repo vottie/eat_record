@@ -1,0 +1,54 @@
+name: Deploy
+
+# main へのマージで、テスト → ステージング(OCI)へ自動デプロイ → 承認 → 本番へデプロイ、と進む。
+#
+#  - 本番のジョブは、GitHub の Environment「production」の承認(Required reviewers)を待つ。
+#    承認するまで、本番のシークレットは使われず、何も実行されない。
+#    承認の前に、ステージングで、Google ログインなど、手動の確認ができる。
+#  - 手動実行(Actions タブ → Deploy → Run workflow)では、ブランチを選んで、ステージングだけにデプロイできる
+#    (マージ前の Dependabot の PR の確認に使う)。本番へは、main だけ。
+#  - デプロイするのは、ブランチ名ではなく、このワークフローが動いた時点のコミット(github.sha)。
+#    承認を待つ間に、別のコミットが入っても、承認した内容だけが、デプロイされる。
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "デプロイ先(production は main だけ)"
+        type: choice
+        options: [staging, production]
+        default: staging
+
+permissions:
+  contents: read
+
+# デプロイは、同時に 1 つだけ。途中で止めない(サーバーが中途半端な状態になるのを避ける)。
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  test:
+    # push のとき(main へのマージ)だけ、デプロイの前にテストを実行する。手動実行では、PR 側のテストが済んでいる前提。
+    if: github.event_name == 'push'
+    uses: ./.github/workflows/ci.yml
+
+  staging:
+    needs: test
+    # test が省かれた(手動実行)ときも進めるため、always() を付けて、失敗・キャンセルのときだけ止める。
+    # シークレットは、呼び出し先のジョブが使う Environment のものだけ(secrets: inherit はしない)。
+    if: always() && !failure() && !cancelled()
+    uses: ./.github/workflows/deploy-stage.yml
+    with:
+      stage: staging
+
+  production:
+    needs: staging
+    if: >-
+      always() && !failure() && !cancelled() &&
+      github.ref == 'refs/heads/main' &&
+      (github.event_name == 'push' || inputs.target == 'production')
+    uses: ./.github/workflows/deploy-stage.yml
+    with:
+      stage: production
