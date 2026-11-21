@@ -1,0 +1,30 @@
+version: 2
+
+updates:
+  # gem の更新。毎週月曜に、まとめて 1 つの PR にする。
+  # Rails などのメジャー更新は、計画的に行うため、自動の PR から除く。
+  # (セキュリティ更新は、この設定とは別に、リポジトリの設定で有効にした場合に、随時 PR が作られる)
+  - package-ecosystem: "bundler"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "07:00"
+      timezone: "Asia/Tokyo"
+    open-pull-requests-limit: 3
+    groups:
+      minor-and-patch:
+        update-types: ["minor", "patch"]
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+
+  # GitHub Actions の更新(commit SHA で固定した版を、更新する)
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "07:00"
+      timezone: "Asia/Tokyo"
+    open-pull-requests-limit: 2
