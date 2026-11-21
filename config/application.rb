@@ -9,8 +9,11 @@ Bundler.require(*Rails.groups)
 module Eatlog
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.1
-    
+    config.load_defaults 8.1
+
+    # load_defaults 7.2 以降は YJIT が有効になる。本番のメモリ(約 1GB)に余裕が無いため、無効のままにする。
+    config.yjit = false
+
     config.paths.add 'lib', eager_load: true
 
     # Configuration for the application, engines, and railties goes here.
