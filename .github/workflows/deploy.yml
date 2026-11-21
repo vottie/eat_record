@@ -37,11 +37,22 @@ jobs:
   staging:
     needs: test
     # test が省かれた(手動実行)ときも進めるため、always() を付けて、失敗・キャンセルのときだけ止める。
-    # シークレットは、呼び出し先のジョブが使う Environment のものだけ(secrets: inherit はしない)。
     if: always() && !failure() && !cancelled()
-    uses: ./.github/workflows/deploy-stage.yml
-    with:
-      stage: staging
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90 # OCI は 1 並列のため、gem のビルドで、50 分前後かかることがある
+    environment: staging
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/deploy
+        with:
+          stage: staging
+          host: ${{ secrets.DEPLOY_HOST }}
+          user: ${{ secrets.DEPLOY_USER }}
+          port: ${{ vars.DEPLOY_PORT }} # ポートは Secret にしない(マスクで、ログの数字が潰れるため)
+          ssh-key: ${{ secrets.DEPLOY_SSH_KEY }}
+          known-hosts: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
 
   production:
     needs: staging
@@ -49,6 +60,18 @@ jobs:
       always() && !failure() && !cancelled() &&
       github.ref == 'refs/heads/main' &&
       (github.event_name == 'push' || inputs.target == 'production')
-    uses: ./.github/workflows/deploy-stage.yml
-    with:
-      stage: production
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90 # 本番は、gem のビルドで 15 分前後
+    environment: production # Required reviewers の承認を待つ。承認まで、本番の Secrets は使われない
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/deploy
+        with:
+          stage: production
+          host: ${{ secrets.DEPLOY_HOST }}
+          user: ${{ secrets.DEPLOY_USER }}
+          port: ${{ vars.DEPLOY_PORT }}
+          ssh-key: ${{ secrets.DEPLOY_SSH_KEY }}
+          known-hosts: ${{ secrets.DEPLOY_KNOWN_HOSTS }}

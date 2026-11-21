@@ -1,0 +1,92 @@
+name: Deploy with Capistrano
+description: 1 つの環境(staging / production)へ、Capistrano でデプロイする。呼び出し元のジョブが、Environment を持つこと。
+
+# Environment の Secrets は、再利用ワークフロー(workflow_call)には渡らないため、
+# Environment を持つジョブから、この composite action の入力として渡す。
+
+inputs:
+  stage:
+    description: staging または production
+    required: true
+  host:
+    required: true
+  user:
+    required: true
+  port:
+    required: true
+  ssh-key:
+    required: true
+  known-hosts:
+    required: true
+
+runs:
+  using: composite
+  steps:
+    # 設定が空でないことを確認する(値は表示しない)。空のまま進むと、原因の分かりにくい失敗になる
+    - name: Verify deploy settings
+      shell: bash
+      env:
+        DEPLOY_HOST: ${{ inputs.host }}
+        DEPLOY_USER: ${{ inputs.user }}
+        DEPLOY_PORT: ${{ inputs.port }}
+        DEPLOY_SSH_KEY: ${{ inputs.ssh-key }}
+        DEPLOY_KNOWN_HOSTS: ${{ inputs.known-hosts }}
+      run: |
+        missing=0
+        for name in DEPLOY_HOST DEPLOY_USER DEPLOY_PORT DEPLOY_SSH_KEY DEPLOY_KNOWN_HOSTS; do
+          if [ -z "${!name}" ]; then echo "::error::$name is empty (Environment: ${{ inputs.stage }})"; missing=1; fi
+        done
+        exit "$missing"
+
+    - name: Install system packages
+      shell: bash
+      run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libmysqlclient-dev
+
+    - uses: ruby/setup-ruby@be3c7df29b3349ec6bcfc6b4792f1cf9f5237d18 # v1.343.0
+      with:
+        bundler-cache: true
+
+    - name: Set up SSH
+      shell: bash
+      env:
+        DEPLOY_SSH_KEY: ${{ inputs.ssh-key }}
+        DEPLOY_KNOWN_HOSTS: ${{ inputs.known-hosts }}
+      run: |
+        install -d -m 700 ~/.ssh
+        printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/deploy_key
+        chmod 600 ~/.ssh/deploy_key
+        printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > ~/.ssh/known_hosts
+        chmod 644 ~/.ssh/known_hosts
+
+    # 環境ごとの設定は、Git 対象外の config/deploy/*.rb の代わりに、環境変数から作る
+    # (config/deploy/ は Git 対象外のため、新しい checkout には、ディレクトリが無い)
+    - name: Prepare Capistrano config
+      shell: bash
+      run: |
+        mkdir -p config/deploy
+        cp .github/deploy/stage.rb "config/deploy/${{ inputs.stage }}.rb"
+
+    - name: Check deploy
+      shell: bash
+      env:
+        DEPLOY_STAGE: ${{ inputs.stage }}
+        DEPLOY_HOST: ${{ inputs.host }}
+        DEPLOY_USER: ${{ inputs.user }}
+        DEPLOY_PORT: ${{ inputs.port }}
+        BRANCH: ${{ github.sha }} # ブランチ名ではなくコミットを指定する(承認を待つ間にブランチが進んでも、承認した内容だけをデプロイする)
+      run: bundle exec cap "$DEPLOY_STAGE" deploy:check
+
+    - name: Deploy
+      shell: bash
+      env:
+        DEPLOY_STAGE: ${{ inputs.stage }}
+        DEPLOY_HOST: ${{ inputs.host }}
+        DEPLOY_USER: ${{ inputs.user }}
+        DEPLOY_PORT: ${{ inputs.port }}
+        BRANCH: ${{ github.sha }}
+      run: bundle exec cap "$DEPLOY_STAGE" deploy
+
+    - name: Remove SSH key
+      if: always()
+      shell: bash
+      run: rm -f ~/.ssh/deploy_key
