@@ -99,4 +99,55 @@ class OmniauthTest < ActionDispatch::IntegrationTest
       assert_redirected_to new_user_session_path
     end
   end
+
+  # --- Host ヘッダーの検査(OmniAuth.config.allowed_hosts) ---
+
+  def with_allowed_hosts(host)
+    old = OmniAuth.config.allowed_hosts
+    OmniAuth.config.allowed_hosts = OmniauthHosts.allowed(host)
+    OmniAuth.config.logger = Logger.new(nil)
+    yield
+  ensure
+    OmniAuth.config.allowed_hosts = old
+  end
+
+  test "allowed hosts match the host and its subdomains only" do
+    allowed = OmniauthHosts.allowed("example.net")
+    matches = ->(h) { allowed.any? { |re| /\A(?:#{re})\z/ === h } }
+
+    assert matches.call("example.net")
+    assert matches.call("www.example.net")
+    assert matches.call("EXAMPLE.net")
+    assert_not matches.call("evilexample.net")
+    assert_not matches.call("example.net.evil.com")
+    assert_not matches.call("evil.com")
+  end
+
+  test "no host restriction when HOST is not set" do
+    assert_nil OmniauthHosts.allowed(nil)
+    assert_nil OmniauthHosts.allowed("  ")
+  end
+
+  # CSRF の検査は、テスト環境では無効(既定)。ここでは、Host の検査だけの結果を見る。
+  # 同じ条件で、許可したホストなら、Google へ進むことを、対照として確認する。
+  test "starting Google sign in from a forged host does not redirect to Google" do
+    with_allowed_hosts("example.net") do
+      host! "example.net"
+      post GOOGLE_PATH
+      assert_match %r{\Ahttps://accounts\.google\.com/}, response.location, "control: allowed host"
+
+      host! "evil.example.org"
+      post GOOGLE_PATH
+      assert_no_match(/accounts\.google\.com/, response.location.to_s)
+    end
+  end
+
+  test "starting Google sign in from a subdomain of the app host redirects to Google" do
+    with_allowed_hosts("example.net") do
+      host! "www.example.net"
+      post GOOGLE_PATH
+
+      assert_match %r{\Ahttps://accounts\.google\.com/}, response.location
+    end
+  end
 end
