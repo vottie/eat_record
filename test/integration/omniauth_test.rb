@@ -33,6 +33,14 @@ class OmniauthTest < ActionDispatch::IntegrationTest
     assert_select "form[action=?][method=post]", GOOGLE_PATH
   end
 
+  # Turbo は、フォームを fetch で送る。Google の認証画面は別オリジンのため、リダイレクトに失敗し、
+  # ボタンを押しても何も起きない。通常のフォーム送信にするため、Turbo を無効にしている。
+  test "the Google sign in form opts out of Turbo" do
+    get new_user_session_path
+
+    assert_select "form[action=?][data-turbo=false]", GOOGLE_PATH
+  end
+
   test "starting Google sign in with a CSRF token redirects to Google" do
     with_forgery_protection do
       get new_user_session_path

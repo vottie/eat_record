@@ -27,7 +27,8 @@
   <%- resource_class.omniauth_providers.each do |provider| %>
     <!-- %= link_to "Sign in with #{OmniAuth::Utils.camelize(provider)}", omniauth_authorize_path(resource_name, provider), method: :post %><br / -->
     <!-- %= link_to "Sign in with #{OmniAuth::Utils.camelize(provider)}", user_google_oauth2_omniauth_authorize_path, method: :post %><br / -->
-    <%= button_to "Sign in with #{OmniAuth::Utils.camelize(provider)}", user_google_oauth2_omniauth_authorize_path, class: "btn btn-primary btn-sm" %><br />
+    <%# Google の認証画面へは、別のサイトへの画面遷移が必要。Turbo は、フォームを fetch で送るため、別オリジンへのリダイレクトに失敗し、何も起きない。Turbo を無効にして、通常のフォーム送信にする。 %>
+    <%= button_to "Sign in with #{OmniAuth::Utils.camelize(provider)}", user_google_oauth2_omniauth_authorize_path, class: "btn btn-primary btn-sm", form: { data: { turbo: false } } %><br />
   <% end %>
   <div class="mt-1">
 <% end %>
