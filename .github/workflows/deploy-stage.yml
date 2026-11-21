@@ -48,9 +48,24 @@ jobs:
           printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
 
+      # 設定が空でないことを確認する(値は表示しない)。空のまま進むと、原因の分かりにくい失敗になる
+      - name: Verify deploy settings
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          missing=0
+          for name in DEPLOY_HOST DEPLOY_USER DEPLOY_PORT DEPLOY_SSH_KEY DEPLOY_KNOWN_HOSTS; do
+            if [ -z "${!name}" ]; then echo "::error::$name is empty (Environment: ${DEPLOY_STAGE})"; missing=1; fi
+          done
+          exit "$missing"
+
       # 環境ごとの設定は、Git 対象外の config/deploy/*.rb の代わりに、環境変数から作る
+      # (config/deploy/ は、Git 対象外のため、新しい checkout には、ディレクトリが無い)
       - name: Prepare Capistrano config
-        run: cp .github/deploy/stage.rb "config/deploy/${DEPLOY_STAGE}.rb"
+        run: |
+          mkdir -p config/deploy
+          cp .github/deploy/stage.rb "config/deploy/${DEPLOY_STAGE}.rb"
 
       - name: Check deploy
         run: bundle exec cap "$DEPLOY_STAGE" deploy:check
