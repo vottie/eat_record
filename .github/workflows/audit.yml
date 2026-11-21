@@ -1,0 +1,33 @@
+name: Audit
+
+# 依存 gem の既知の脆弱性を検査する。
+# テスト(ci.yml)とは別のワークフローにして、新しい警告が出た日に、無関係な変更のテストやデプロイを止めない。
+on:
+  pull_request:
+    paths: [Gemfile, Gemfile.lock]
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 22 * * *" # 毎日 07:00 JST。PR が無くても、新しい警告を早く知る
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: ruby/setup-ruby@be3c7df29b3349ec6bcfc6b4792f1cf9f5237d18 # v1.343.0
+        with:
+          bundler-cache: false
+
+      - name: Check Gemfile.lock for known vulnerabilities
+        run: |
+          gem install bundler-audit -v 0.9.3 --no-document
+          bundle-audit check --update
