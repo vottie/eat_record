@@ -10,7 +10,7 @@ gem "rails", "~> 8.1.0"
 gem "minitest", "< 6"
 
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
-gem "sprockets-rails", "~> 3.4", ">=3.4.2"
+gem "sprockets-rails", "~> 3.5"
 
 
 # Use sqlite3 as the database for Active Record
@@ -93,7 +93,7 @@ group :development do
   # gem "spring"
   
   # Caistrano
-  gem 'capistrano', '~> 3.19.2'
+  gem 'capistrano', '~> 3.20.1'
   gem 'capistrano-rbenv'
   gem 'capistrano-bundler'
   gem 'capistrano-rails'
