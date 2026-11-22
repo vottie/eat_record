@@ -34,9 +34,9 @@ module StagingFlow
     started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     yield
     check_console(id, name, started)
-    StepReport.record(screen: screen_name, id: id, name: name, result: "成功", seconds: elapsed(started))
+    StepReport.record(screen: screen_name, id: id, name: name, result: "Passed", seconds: elapsed(started))
   rescue Minitest::Assertion, StandardError => e
-    StepReport.record(screen: screen_name, id: id, name: name, result: "失敗", seconds: elapsed(started), message: e.message)
+    StepReport.record(screen: screen_name, id: id, name: name, result: "Failed", seconds: elapsed(started), message: e.message)
     raise
   end
 
@@ -48,7 +48,7 @@ module StagingFlow
   def check_console(id, name, started)
     errors = console_errors
     return if errors.empty?
-    raise Minitest::Assertion, "コンソールにエラー(#{id} #{name}): #{errors.first(2).join(' / ')}"
+    raise Minitest::Assertion, "Console error (#{id} #{name}): #{errors.first(2).join(' / ')}"
   end
 
   # 既知で、今回の対象外のもの(無視する)。
@@ -69,9 +69,9 @@ module StagingFlow
   def check_horizontal_scroll
     started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     overflow = page.evaluate_script("document.documentElement.scrollWidth > window.innerWidth")
-    StepReport.record(screen: screen_name, id: "C2", name: "横スクロールが出ない",
-                      result: overflow ? "警告" : "成功", seconds: elapsed(started),
-                      message: overflow ? "ページが画面幅より広い" : nil)
+    StepReport.record(screen: screen_name, id: "C2", name: "No horizontal scroll",
+                      result: overflow ? "Warning" : "Passed", seconds: elapsed(started),
+                      message: overflow ? "The page is wider than the screen" : nil)
   end
 
   def login_as_test_user(password = e2e_password)
@@ -106,26 +106,26 @@ module StagingFlow
   def run_flow
     shop = "#{RECORD_PREFIX}#{ENV.fetch('GITHUB_RUN_ID', Time.now.strftime('%Y%m%d%H%M%S'))}"
 
-    step("S1", "ログイン画面を開く") do
+    step("S1", "Open the login page") do
       visit "/users/sign_in"
       assert_field "user_email"
       assert_field "user_password"
       assert_button "Log in"
     end
 
-    step("S2", "ログインに失敗する") do
+    step("S2", "Fail to log in") do
       login_as_test_user("wrong-#{SecureRandom.hex(4)}")
       assert_field "user_password"
       assert_no_text "ユーザ名:"
     end
 
-    step("S3", "ログインする") do
+    step("S3", "Log in") do
       login_as_test_user
       assert_text "ユーザ名:"
       delete_leftover_records
     end
 
-    step("S4", "記録を登録する") do
+    step("S4", "Create a record") do
       visit "/eat_records"
       click_on "新たに登録"
       fill_in "eat_record_shop_name", with: shop
@@ -141,12 +141,12 @@ module StagingFlow
       assert_text "テスト定食"
     end
 
-    step("S5", "一覧に反映される") do
+    step("S5", "The record appears in the list") do
       click_on "戻る"
       assert_link shop
     end
 
-    step("S6", "記録を編集する") do
+    step("S6", "Edit the record") do
       click_on shop
       click_on "編集"
       fill_in "eat_record_eat_menu", with: "テスト定食(更新)"
@@ -154,20 +154,20 @@ module StagingFlow
       assert_text "テスト定食(更新)"
     end
 
-    step("S7", "通算の記録を見る") do
+    step("S7", "View the all-time records") do
       click_on "戻る"
       click_on "通算の記録"
       assert_text shop
     end
 
-    step("S8", "記録を削除する") do
+    step("S8", "Delete the record") do
       click_on "戻る"
       click_on shop
       accept_confirm { click_on "削除" }
       assert_no_link shop
     end
 
-    step("S9", "ログアウトする") do
+    step("S9", "Log out") do
       click_on "ログアウト"
       # ログアウトの完了(ログイン画面への移動)を待ってから、一覧を直接開く(待たないと、処理中のログイン状態で一覧が開く)
       assert_current_path "/users/sign_in"
@@ -175,12 +175,12 @@ module StagingFlow
       assert_current_path "/users/sign_in"
     end
 
-    check_horizontal_scroll if screen_name == "スマホ"
+    check_horizontal_scroll if screen_name == "Mobile"
   end
 end
 
 class DesktopStagingFlowTest < ApplicationSystemTestCase
-  SCREEN = "デスクトップ".freeze
+  SCREEN = "Desktop".freeze
   use_chrome :desktop
   include StagingFlow
 
@@ -190,7 +190,7 @@ class DesktopStagingFlowTest < ApplicationSystemTestCase
 end
 
 class MobileStagingFlowTest < ApplicationSystemTestCase
-  SCREEN = "スマホ".freeze
+  SCREEN = "Mobile".freeze
   use_chrome :mobile
   include StagingFlow
 

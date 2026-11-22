@@ -13,17 +13,17 @@ module StepReport
     end
 
     def markdown
-      failed = @steps.count { |s| s.result == "失敗" }
-      warned = @steps.count { |s| s.result == "警告" }
+      failed = @steps.count { |s| s.result == "Failed" }
+      warned = @steps.count { |s| s.result == "Warning" }
       lines = []
-      lines << "## ステージング確認テスト"
+      lines << "## Staging check"
       lines << ""
-      lines << "成功 #{@steps.count { |s| s.result == '成功' }} / 失敗 #{failed} / 警告 #{warned}(全 #{@steps.size} ステップ)"
+      lines << "Passed #{@steps.count { |s| s.result == 'Passed' }} / Failed #{failed} / Warning #{warned} (#{@steps.size} steps in total)"
       lines << ""
-      lines << "| 画面幅 | ステップ | 結果 | 時間 | 内容 |"
+      lines << "| Screen | Step | Result | Time | Details |"
       lines << "|---|---|---|---|---|"
       @steps.each do |s|
-        lines << "| #{s.screen} | #{s.id} #{s.name} | #{s.result} | #{format('%.1f', s.seconds)} 秒 | #{cell(s.message)} |"
+        lines << "| #{s.screen} | #{s.id} #{s.name} | #{s.result} | #{format('%.1f', s.seconds)} s | #{cell(s.message)} |"
       end
       lines.join("\n") + "\n"
     end
