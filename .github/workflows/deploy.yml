@@ -1,6 +1,10 @@
 name: Deploy
 
-# main へのマージで、テスト → ステージング(OCI)へ自動デプロイ → 承認 → 本番へデプロイ、と進む。
+# main へのマージで、テスト → ステージング(OCI)へ自動デプロイ → ステージングの画面確認(ブラウザテスト)
+# → 承認 → 本番へデプロイ、と進む。
+#
+#  - ステージングの画面確認(staging-check)に失敗したら、本番へは進まない。緊急のときだけ、
+#    手動実行の skip_e2e で、省ける(その分、手動で確認すること)。
 #
 #  - 本番のジョブは、GitHub の Environment「production」の承認(Required reviewers)を待つ。
 #    承認するまで、本番のシークレットは使われず、何も実行されない。
@@ -19,6 +23,10 @@ on:
         type: choice
         options: [staging, production]
         default: staging
+      skip_e2e:
+        description: "ステージングの画面確認(ブラウザテスト)を省く(緊急用)"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -54,8 +62,30 @@ jobs:
           ssh-key: ${{ secrets.DEPLOY_SSH_KEY }}
           known-hosts: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
 
-  production:
+  # ステージングの画面確認。ステージングのデプロイが済んだ後に、ブラウザテストを実行する。
+  # 失敗したら、production は実行されない。結果の表は、ジョブのサマリに出る。
+  staging-check:
     needs: staging
+    if: always() && !failure() && !cancelled() && !inputs.skip_e2e
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    environment: staging
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/staging-check
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          user: ${{ secrets.DEPLOY_USER }}
+          port: ${{ vars.DEPLOY_PORT }}
+          ssh-key: ${{ secrets.DEPLOY_SSH_KEY }}
+          known-hosts: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+          e2e-email: ${{ secrets.STAGING_E2E_EMAIL }}
+          e2e-password: ${{ secrets.STAGING_E2E_PASSWORD }}
+
+  production:
+    needs: [staging, staging-check]
     if: >-
       always() && !failure() && !cancelled() &&
       github.ref == 'refs/heads/main' &&
