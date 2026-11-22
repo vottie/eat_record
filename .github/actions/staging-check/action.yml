@@ -1,0 +1,126 @@
+name: Staging browser check
+description: ステージングの画面確認(ブラウザテスト)を実行する。呼び出し元のジョブが、Environment「staging」を持つこと。
+
+# ステージングは、SSH(22)だけを公開していて、HTTP は公開していない。
+# そのため、SSH のポート転送で、ステージングの Puma の unix ソケットを、この実行環境の localhost に引き込み、
+# そこへ、ヘッドレス Chrome でアクセスする(ステージングの公開範囲は変えない)。
+# Environment の Secrets は、deploy action と同じく、呼び出し元のジョブから、入力として渡す。
+
+inputs:
+  host:
+    required: true
+  user:
+    required: true
+  port:
+    required: true
+  ssh-key:
+    required: true
+  known-hosts:
+    required: true
+  e2e-email:
+    description: ステージングのテスト専用ユーザーのメールアドレス
+    required: true
+  e2e-password:
+    description: ステージングのテスト専用ユーザーのパスワード
+    required: true
+  socket-path:
+    description: ステージングの Puma の unix ソケットのパス(サーバー側)
+    required: false
+    default: /var/www/html/rails/eat_records/current/tmp/sockets/puma.sock
+  local-port:
+    description: トンネルの、この実行環境側のポート
+    required: false
+    default: "13000"
+
+runs:
+  using: composite
+  steps:
+    # 設定が空でないことを確認する(値は表示しない)
+    - name: Verify settings
+      shell: bash
+      env:
+        DEPLOY_HOST: ${{ inputs.host }}
+        DEPLOY_USER: ${{ inputs.user }}
+        DEPLOY_PORT: ${{ inputs.port }}
+        DEPLOY_SSH_KEY: ${{ inputs.ssh-key }}
+        DEPLOY_KNOWN_HOSTS: ${{ inputs.known-hosts }}
+        E2E_EMAIL: ${{ inputs.e2e-email }}
+        E2E_PASSWORD: ${{ inputs.e2e-password }}
+      run: |
+        missing=0
+        for name in DEPLOY_HOST DEPLOY_USER DEPLOY_PORT DEPLOY_SSH_KEY DEPLOY_KNOWN_HOSTS E2E_EMAIL E2E_PASSWORD; do
+          if [ -z "${!name}" ]; then echo "::error::$name is empty (Environment: staging)"; missing=1; fi
+        done
+        exit "$missing"
+
+    # mysql2 gem のビルドに必要(テストの DB は SQLite)
+    - name: Install system packages
+      shell: bash
+      run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libmysqlclient-dev
+
+    - uses: ruby/setup-ruby@be3c7df29b3349ec6bcfc6b4792f1cf9f5237d18 # v1.343.0
+      with:
+        bundler-cache: true
+
+    - name: Set up SSH
+      shell: bash
+      env:
+        DEPLOY_SSH_KEY: ${{ inputs.ssh-key }}
+        DEPLOY_KNOWN_HOSTS: ${{ inputs.known-hosts }}
+      run: |
+        install -d -m 700 ~/.ssh
+        printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/deploy_key
+        chmod 600 ~/.ssh/deploy_key
+        printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > ~/.ssh/known_hosts
+        chmod 644 ~/.ssh/known_hosts
+
+    - name: Open tunnel to staging
+      shell: bash
+      env:
+        DEPLOY_HOST: ${{ inputs.host }}
+        DEPLOY_USER: ${{ inputs.user }}
+        DEPLOY_PORT: ${{ inputs.port }}
+        SOCKET_PATH: ${{ inputs.socket-path }}
+        LOCAL_PORT: ${{ inputs.local-port }}
+      run: |
+        ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o BatchMode=yes \
+            -o StrictHostKeyChecking=yes -o ExitOnForwardFailure=yes \
+            -p "$DEPLOY_PORT" -f -N \
+            -L "${LOCAL_PORT}:${SOCKET_PATH}" "${DEPLOY_USER}@${DEPLOY_HOST}"
+        # アプリが応答するまで待つ(Host ヘッダーが空だと、400 になるため、localhost を指定する)
+        for i in $(seq 1 30); do
+          code=$(curl -s -o /dev/null -w '%{http_code}' -H 'Host: localhost' "http://localhost:${LOCAL_PORT}/users/sign_in" || true)
+          if [ "$code" = "200" ]; then echo "staging reachable through the tunnel"; exit 0; fi
+          sleep 2
+        done
+        echo "::error::staging did not respond through the tunnel (last HTTP status: ${code})"
+        exit 1
+
+    # 結果の表は、テストが、ジョブのサマリ(GITHUB_STEP_SUMMARY)に書く
+    - name: Run browser tests
+      shell: bash
+      env:
+        RAILS_ENV: test
+        E2E_BASE_URL: http://localhost:${{ inputs.local-port }}
+        E2E_EMAIL: ${{ inputs.e2e-email }}
+        E2E_PASSWORD: ${{ inputs.e2e-password }}
+      run: |
+        bin/rails db:schema:load
+        bin/rails test:system
+
+    # 失敗したときだけ、スクリーンショットを残す(14 日間)
+    - name: Upload screenshots
+      if: failure()
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+      with:
+        name: staging-check-screenshots
+        path: tmp/screenshots
+        retention-days: 14
+        if-no-files-found: ignore
+
+    - name: Clean up
+      if: always()
+      shell: bash
+      run: |
+        pkill -f "ssh .* -L ${{ inputs.local-port }}:" || true
+        rm -f ~/.ssh/deploy_key
