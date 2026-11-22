@@ -100,6 +100,9 @@ group :development do
 
   # セキュリティ上の問題になりうるコードの静的解析(#67)。CI でも実行する
   gem "brakeman", require: false
+
+  # Ruby コードの書き方の静的解析(#70)。Rails 公式の標準設定(omakase)を基準にする。CI でも実行する
+  gem "rubocop-rails-omakase", "~> 1.1", require: false
 end
 
 group :test do

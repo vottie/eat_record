@@ -1,0 +1,7 @@
+# Rails 公式の標準設定(omakase)を基準にする(#70)。
+# 既存コードの指摘は、.rubocop_todo.yml に退避してある(ファイル単位の除外)。
+# 新しいファイルや、除外していない種類の指摘が出たら、CI が赤になる。
+# 退避した指摘は、直したら、.rubocop_todo.yml から外していく。
+inherit_from: .rubocop_todo.yml
+
+inherit_gem: { rubocop-rails-omakase: rubocop.yml }
