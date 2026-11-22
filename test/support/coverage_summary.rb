@@ -16,16 +16,16 @@ module CoverageSummary
 
     def markdown(result)
       lines = []
-      lines << "## テストカバレッジ"
+      lines << "## Test coverage"
       lines << ""
-      lines << "| 区分 | カバー率 | カバー / 対象 |"
+      lines << "| Type | Coverage | Covered / Total |"
       lines << "|---|---|---|"
-      lines << row("行", result.coverage_statistics[:line])
-      lines << row("分岐", result.coverage_statistics[:branch])
+      lines << row("Line", result.coverage_statistics[:line])
+      lines << row("Branch", result.coverage_statistics[:branch])
       lines << ""
-      lines << "<details><summary>ファイルごと(行のカバー率が低い順)</summary>"
+      lines << "<details><summary>Per file (lowest line coverage first)</summary>"
       lines << ""
-      lines << "| ファイル | 行 | 分岐 |"
+      lines << "| File | Line | Branch |"
       lines << "|---|---|---|"
       result.files.sort_by { |f| [f.covered_percent, f.filename] }.each do |file|
         lines << "| `#{relative(file.filename)}` | #{cell(file.coverage_statistics[:line])} | #{cell(file.coverage_statistics[:branch])} |"
@@ -43,7 +43,7 @@ module CoverageSummary
     # 対象が 0 件(分岐がないファイルなど)は「-」にする
     def cell(stat)
       return "-" if stat.nil? || stat.total.zero?
-      "#{'%.1f' % stat.percent}%(#{stat.covered}/#{stat.total})"
+      "#{'%.1f' % stat.percent}% (#{stat.covered}/#{stat.total})"
     end
 
     def relative(filename)
