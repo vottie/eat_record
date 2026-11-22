@@ -94,6 +94,8 @@ GEM
     bootstrap4-kaminari-views (1.0.1)
       kaminari (>= 0.13)
       rails (>= 3.1)
+    brakeman (8.1.1)
+      racc
     builder (3.3.0)
     capistrano (3.19.2)
       airbrussh (>= 1.0.0)
@@ -411,6 +413,7 @@ DEPENDENCIES
   bootsnap
   bootstrap (~> 5.3.8)
   bootstrap4-kaminari-views
+  brakeman
   capistrano (~> 3.19.2)
   capistrano-bundler
   capistrano-rails

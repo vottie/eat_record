@@ -40,3 +40,26 @@ jobs:
 
       - name: Run tests
         run: bin/rails test
+
+  # セキュリティ上の問題になりうるコードの静的解析(#67)。新しい指摘があれば、赤にする。
+  # 既存の指摘は、理由付きで config/brakeman.ignore に記録してある。ローカルでも、同じコマンドで確認できる。
+  # 解析の内容は、Gemfile.lock で固定した Brakeman の版で決まる(bundle-audit のように、実行日の DB で結果が変わらない)。
+  # そのため、audit.yml とは違い、ここ(デプロイの前提のテスト)に置く。
+  brakeman:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # mysql2 gem のビルドに必要
+      - name: Install system packages
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libmysqlclient-dev
+
+      - uses: ruby/setup-ruby@be3c7df29b3349ec6bcfc6b4792f1cf9f5237d18 # v1.343.0
+        with:
+          bundler-cache: true
+
+      - name: Run Brakeman
+        run: bundle exec brakeman --no-pager
