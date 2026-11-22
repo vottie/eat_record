@@ -103,5 +103,7 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver", ">= 4.11"
+  # テストのカバレッジ(行・分岐)を計測する。test_helper.rb の先頭で読み込む
+  gem "simplecov", require: false
 end
 
