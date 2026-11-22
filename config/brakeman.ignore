@@ -1,0 +1,14 @@
+{
+  "ignored_warnings": [
+    {
+      "check_name": "Ruby2Shell",
+      "file": ".ruby-version",
+      "line": 1,
+      "fingerprint": "b2ef9ca037e09c20a8a7b7aec14bd62b16fb830e3723adf3b6936529ed347bde",
+      "confidence": "High",
+      "note": "Ruby のパッチ版の更新で解消する。#77 で対応する(解消したら、この記録を外す)。"
+    }
+  ],
+  "updated": "2026-11-22 22:26:21 +0900",
+  "brakeman_version": "8.1.1"
+}

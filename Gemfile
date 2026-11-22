@@ -97,6 +97,9 @@ group :development do
   gem 'capistrano-rbenv'
   gem 'capistrano-bundler'
   gem 'capistrano-rails'
+
+  # セキュリティ上の問題になりうるコードの静的解析(#67)。CI でも実行する
+  gem "brakeman", require: false
 end
 
 group :test do
