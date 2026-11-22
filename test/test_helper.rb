@@ -1,3 +1,25 @@
+# カバレッジの計測は、アプリのコードを読み込む前に開始する(#68)。
+# 可視化のみで、閾値は設けない(数値を見てから、最低ラインを決める)。
+# E2E_BASE_URL を指定したブラウザテスト(ステージングの確認)は、アプリが別のプロセスで動き、
+# このプロセスでは通らないため、計測しない(0% に近い、誤解を招く数値が、ジョブサマリに出てしまう)。
+if ENV["E2E_BASE_URL"].to_s.strip.empty?
+  require "simplecov"
+  # 前回の結果と合算されないよう、並列のワーカーを起動する前に消す(SimpleCov は、10 分以内の結果を自動で合算する)。
+  # これがないと、テストを 1 ファイルだけ動かしても、直前の全体実行の数値が表示される。
+  FileUtils.rm_rf(File.expand_path("../coverage", __dir__))
+  require_relative "support/coverage_summary"
+  SimpleCov.start "rails" do
+    enable_coverage :branch
+    # 標準の HTML レポートに加えて、GitHub Actions のジョブサマリにも出す
+    formatter SimpleCov::Formatter::MultiFormatter.new([
+      SimpleCov::Formatter::HTMLFormatter,
+      CoverageSummary::Formatter
+    ])
+    # テストを並列(複数プロセス)で動かすため、ワーカーごとの結果を合算する
+    merge_subprocesses true
+  end
+end
+
 ENV["RAILS_ENV"] ||= "test"
 # メールの送信元は、本番では .env の値を使う。テストでは .env を読み込まないため、固定値を与える
 # (NotificationMailer と Devise のメーラーが、読み込み時に参照する)。
