@@ -18,6 +18,10 @@ inputs:
     required: true
   known-hosts:
     required: true
+  reset-db:
+    description: "true のとき、デプロイの後に、ステージングの DB を初期データに戻す(staging のときだけ有効。#33)"
+    required: false
+    default: "false"
 
 runs:
   using: composite
@@ -85,6 +89,19 @@ runs:
         DEPLOY_PORT: ${{ inputs.port }}
         BRANCH: ${{ github.sha }}
       run: bundle exec cap "$DEPLOY_STAGE" deploy
+
+    # ステージングの DB を、固定の初期データに戻す(手動実行で reset_db を選んだときだけ)。
+    # staging 以外では、入力が true でも実行しない。サーバー側(staging:reset)にも、同じ守りがある。
+    - name: Reset staging database
+      if: inputs.stage == 'staging' && inputs.reset-db == 'true'
+      shell: bash
+      env:
+        DEPLOY_STAGE: ${{ inputs.stage }}
+        DEPLOY_HOST: ${{ inputs.host }}
+        DEPLOY_USER: ${{ inputs.user }}
+        DEPLOY_PORT: ${{ inputs.port }}
+        BRANCH: ${{ github.sha }}
+      run: bundle exec cap "$DEPLOY_STAGE" db:reset
 
     - name: Remove SSH key
       if: always()
