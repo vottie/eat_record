@@ -6,6 +6,11 @@ require "active_support/core_ext/integer/time"
 # and recreated between test runs. Don't rely on the data there!
 
 Rails.application.configure do
+  # Google ログインの設定(client_id)が空のままだと、omniauth-google-oauth2 は認証の開始時にエラーにする。
+  # テストでは Google と通信しないため、未設定のときだけ、ダミーの値を入れる(initializers の前に読まれる)。
+  ENV["GOOGLE_CLIENT_ID"] = "test-client-id" if ENV["GOOGLE_CLIENT_ID"].to_s.strip.empty?
+  ENV["GOOGLE_CLIENT_SECRET"] = "test-client-secret" if ENV["GOOGLE_CLIENT_SECRET"].to_s.strip.empty?
+
   # Settings specified here will take precedence over those in config/application.rb.
 
   # Turn false under Spring and add config.action_view.cache_template_loading = true.
