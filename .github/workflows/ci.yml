@@ -85,3 +85,40 @@ jobs:
 
       - name: Run RuboCop
         run: bundle exec rubocop
+
+  # デプロイ設定(Capistrano)の検査(#87)。サーバーへは接続せず、--dry-run で、実行されるタスクだけを確認する。
+  # Capistrano の版と config/deploy.rb の lock の不一致(#86 で起きた)、タスクの定義の誤りを、マージ前に検出する。
+  # 設定は、デプロイと同じ .github/deploy/stage.rb を使う(ホスト名などは、ダミーの値)。
+  deploy-check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      DEPLOY_HOST: 127.0.0.1
+      DEPLOY_USER: deploy
+      DEPLOY_PORT: "22"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # mysql2 gem のビルドに必要
+      - name: Install system packages
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libmysqlclient-dev
+
+      - uses: ruby/setup-ruby@be3c7df29b3349ec6bcfc6b4792f1cf9f5237d18 # v1.343.0
+        with:
+          bundler-cache: true
+
+      - name: Dry-run the Capistrano tasks
+        run: |
+          mkdir -p config/deploy
+          for stage in staging production; do
+            cp .github/deploy/stage.rb "config/deploy/${stage}.rb"
+            DEPLOY_STAGE="$stage" bundle exec cap "$stage" deploy --dry-run
+          done
+          DEPLOY_STAGE=staging bundle exec cap staging db:reset --dry-run
+          # ステージングの DB の初期化(#33)は、本番では拒否されること
+          if DEPLOY_STAGE=production bundle exec cap production db:reset --dry-run; then
+            echo "::error::db:reset must refuse the production stage"
+            exit 1
+          fi

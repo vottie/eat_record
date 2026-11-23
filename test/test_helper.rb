@@ -17,6 +17,9 @@ if ENV["E2E_BASE_URL"].to_s.strip.empty?
     ])
     # テストを並列(複数プロセス)で動かすため、ワーカーごとの結果を合算する
     merge_subprocesses true
+    # 最低ライン(#87)。現状(行 93.65%、分岐 87.50%)より少し低く置き、大きく下がったときに失敗させる。
+    # CI(全テストを動かす)だけで有効にする。手元で一部のテストだけを動かすと、数値が低くなるため。
+    minimum_coverage line: 90, branch: 80 if ENV["CI"]
   end
 end
 
