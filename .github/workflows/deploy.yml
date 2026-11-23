@@ -11,6 +11,9 @@ name: Deploy
 #    承認の前に、ステージングで、Google ログインなど、手動の確認ができる。
 #  - 手動実行(Actions タブ → Deploy → Run workflow)では、ブランチを選んで、ステージングだけにデプロイできる
 #    (マージ前の Dependabot の PR の確認に使う)。本番へは、main だけ。
+#  - 手動実行の reset_db を選ぶと、ステージングのデプロイの後に、ステージングの DB を、固定の初期データに戻す
+#    (E2E 用ユーザーのメールとパスワードは、ステージングのサーバーの .env から読む)。
+#    マージ後の自動実行では、戻さない(ステージングに溜まったデータで、マイグレーションを確認できるようにするため)。
 #  - デプロイするのは、ブランチ名ではなく、このワークフローが動いた時点のコミット(github.sha)。
 #    承認を待つ間に、別のコミットが入っても、承認した内容だけが、デプロイされる。
 on:
@@ -25,6 +28,10 @@ on:
         default: staging
       skip_e2e:
         description: "ステージングの画面確認(ブラウザテスト)を省く(緊急用)"
+        type: boolean
+        default: false
+      reset_db:
+        description: "デプロイの後に、ステージングの DB を、固定の初期データに戻す(ステージングだけ。本番の DB には触れない)"
         type: boolean
         default: false
 
@@ -61,6 +68,7 @@ jobs:
           port: ${{ vars.DEPLOY_PORT }} # ポートは Secret にしない(マスクで、ログの数字が潰れるため)
           ssh-key: ${{ secrets.DEPLOY_SSH_KEY }}
           known-hosts: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+          reset-db: ${{ inputs.reset_db && 'true' || 'false' }} # push のときは inputs が空のため、false
 
   # ステージングの画面確認。ステージングのデプロイが済んだ後に、ブラウザテストを実行する。
   # 失敗したら、production は実行されない。結果の表は、ジョブのサマリに出る。
